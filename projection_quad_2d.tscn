@@ -3,23 +3,23 @@
 [ext_resource type="Script" path="res://projection_quad_2d.gd" id="1_0yffn"]
 [ext_resource type="Script" path="res://draggable_marker.gd" id="1_x4idj"]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_wmfbd"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_6vxvn"]
 _surfaces = [{
-"aabb": AABB(-150, -150, 0, 300, 300, 1e-05),
-"attribute_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63),
+"aabb": AABB(-100, -100, 0, 200, 200, 1e-05),
+"attribute_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63),
 "format": 34359742481,
-"index_count": 12,
-"index_data": PackedByteArray(4, 0, 0, 0, 1, 0, 4, 0, 1, 0, 3, 0, 4, 0, 3, 0, 2, 0, 4, 0, 2, 0, 0, 0),
+"index_count": 24,
+"index_data": PackedByteArray(0, 0, 1, 0, 3, 0, 1, 0, 4, 0, 3, 0, 1, 0, 2, 0, 4, 0, 2, 0, 5, 0, 4, 0, 3, 0, 4, 0, 6, 0, 4, 0, 7, 0, 6, 0, 4, 0, 5, 0, 7, 0, 5, 0, 8, 0, 7, 0),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 5,
-"vertex_data": PackedByteArray(0, 0, 22, 195, 0, 0, 22, 195, 0, 0, 0, 0, 0, 0, 22, 67, 0, 0, 22, 195, 0, 0, 0, 0, 0, 0, 22, 195, 0, 0, 22, 67, 0, 0, 0, 0, 0, 0, 22, 67, 0, 0, 22, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+"vertex_count": 9,
+"vertex_data": PackedByteArray(0, 0, 200, 194, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 66, 0, 0, 0, 0)
 }]
 
 [node name="projection_quad_2d" type="MeshInstance2D"]
-mesh = SubResource("ArrayMesh_wmfbd")
+mesh = SubResource("ArrayMesh_6vxvn")
 script = ExtResource("1_0yffn")
-start_size = Vector2(300, 300)
+subdivision_resolution = Vector2(6, 6)
 
 [node name="vert_handle_0" type="ColorRect" parent="."]
 anchors_preset = 8
@@ -27,10 +27,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -158.0
-offset_top = -158.0
-offset_right = -142.0
-offset_bottom = -142.0
+offset_left = -108.0
+offset_top = -108.0
+offset_right = -92.0
+offset_bottom = -92.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_x4idj")
@@ -41,10 +41,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 142.0
-offset_top = -158.0
-offset_right = 158.0
-offset_bottom = -142.0
+offset_left = 92.0
+offset_top = -108.0
+offset_right = 108.0
+offset_bottom = -92.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_x4idj")
@@ -56,10 +56,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -158.0
-offset_top = 142.0
-offset_right = -142.0
-offset_bottom = 158.0
+offset_left = -108.0
+offset_top = 92.0
+offset_right = -92.0
+offset_bottom = 108.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_x4idj")
@@ -71,10 +71,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 142.0
-offset_top = 142.0
-offset_right = 158.0
-offset_bottom = 158.0
+offset_left = 92.0
+offset_top = 92.0
+offset_right = 108.0
+offset_bottom = 108.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_x4idj")
