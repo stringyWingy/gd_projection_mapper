@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=3 uid="uid://g3qon6c7xytj"]
+
+[ext_resource type="Script" path="res://projection_quad_2d.gd" id="1_0yffn"]
+[ext_resource type="Script" path="res://draggable_marker.gd" id="1_x4idj"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_wmfbd"]
+_surfaces = [{
+"aabb": AABB(-150, -150, 0, 300, 300, 1e-05),
+"attribute_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 0, 63),
+"format": 34359742481,
+"index_count": 12,
+"index_data": PackedByteArray(4, 0, 0, 0, 1, 0, 4, 0, 1, 0, 3, 0, 4, 0, 3, 0, 2, 0, 4, 0, 2, 0, 0, 0),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 5,
+"vertex_data": PackedByteArray(0, 0, 22, 195, 0, 0, 22, 195, 0, 0, 0, 0, 0, 0, 22, 67, 0, 0, 22, 195, 0, 0, 0, 0, 0, 0, 22, 195, 0, 0, 22, 67, 0, 0, 0, 0, 0, 0, 22, 67, 0, 0, 22, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}]
+
+[node name="projection_quad_2d" type="MeshInstance2D"]
+mesh = SubResource("ArrayMesh_wmfbd")
+script = ExtResource("1_0yffn")
+start_size = Vector2(300, 300)
+
+[node name="vert_handle_0" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -158.0
+offset_top = -158.0
+offset_right = -142.0
+offset_bottom = -142.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x4idj")
+
+[node name="vert_handle_1" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 142.0
+offset_top = -158.0
+offset_right = 158.0
+offset_bottom = -142.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x4idj")
+vert_index = 1
+
+[node name="vert_handle_2" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -158.0
+offset_top = 142.0
+offset_right = -142.0
+offset_bottom = 158.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x4idj")
+vert_index = 2
+
+[node name="vert_handle_3" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 142.0
+offset_top = 142.0
+offset_right = 158.0
+offset_bottom = 158.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x4idj")
+vert_index = 3
+
+[connection signal="dragged" from="vert_handle_0" to="." method="on_vertex_handle_moved"]
+[connection signal="dragged" from="vert_handle_1" to="." method="on_vertex_handle_moved"]
+[connection signal="dragged" from="vert_handle_2" to="." method="on_vertex_handle_moved"]
+[connection signal="dragged" from="vert_handle_3" to="." method="on_vertex_handle_moved"]
