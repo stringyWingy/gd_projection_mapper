@@ -20,6 +20,7 @@ config/icon="res://icon.webp"
 [display]
 
 window/size/mode=3
+window/size/resizable=false
 window/size/borderless=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
@@ -28,3 +29,4 @@ window/stretch/aspect="expand"
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)
