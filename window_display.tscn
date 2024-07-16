@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1uy7hxqo1tfu"]
+
+[ext_resource type="Script" path="res://window_display.gd" id="1_cp7r0"]
+
+[node name="Window" type="Window"]
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+canvas_cull_mask = 4294966273
+mode = 3
+initial_position = 5
+size = Vector2i(1366, 768)
+borderless = true
+script = ExtResource("1_cp7r0")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 1366.0
+offset_bottom = 768.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+canvas_cull_mask = 4294966273
+size = Vector2i(1366, 768)
+render_target_update_mode = 4
+
+[node name="Label" type="Label" parent="."]
+offset_right = 62.0
+offset_bottom = 23.0
+text = "DISPLAY"

@@ -1,0 +1,84 @@
+[gd_scene load_steps=3 format=3 uid="uid://vpoh8hw542lm"]
+
+[ext_resource type="Script" path="res://window_editor.gd" id="1_16hpm"]
+[ext_resource type="PackedScene" uid="uid://xwkspajfdmd7" path="res://display_world.tscn" id="1_niy3p"]
+
+[node name="WindowEditor" type="Control"]
+layout_direction = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_16hpm")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 200
+
+[node name="TabContainer" type="TabContainer" parent="HSplitContainer"]
+layout_mode = 2
+
+[node name="UV" type="AspectRatioContainer" parent="HSplitContainer/TabContainer"]
+layout_mode = 2
+
+[node name="UV" type="SubViewportContainer" parent="HSplitContainer/TabContainer/UV"]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="HSplitContainer/TabContainer/UV/UV"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Scenes" type="FlowContainer" parent="HSplitContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/TabContainer/Scenes"]
+layout_mode = 2
+text = "This is a scene selector
+"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer"]
+layout_mode = 2
+split_offset = 700
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="HSplitContainer/VSplitContainer"]
+clip_contents = true
+layout_mode = 2
+ratio = 1.7778
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="HSplitContainer/VSplitContainer/AspectRatioContainer"]
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="HSplitContainer/VSplitContainer/AspectRatioContainer/SubViewportContainer"]
+handle_input_locally = false
+canvas_cull_mask = 4294966275
+size = Vector2i(842, 473)
+render_target_update_mode = 4
+
+[node name="DisplayWorld" parent="HSplitContainer/VSplitContainer/AspectRatioContainer/SubViewportContainer/SubViewport" instance=ExtResource("1_niy3p")]
+
+[node name="FlowContainer" type="FlowContainer" parent="HSplitContainer/VSplitContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/VSplitContainer/FlowContainer"]
+layout_mode = 2
+text = "This is a queued scene"
+
+[node name="Label2" type="Label" parent="HSplitContainer/VSplitContainer/FlowContainer"]
+layout_mode = 2
+text = "This is a queued scene"
+
+[node name="Label3" type="Label" parent="HSplitContainer/VSplitContainer/FlowContainer"]
+layout_mode = 2
+text = "This is a queued scene"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(683, 384)

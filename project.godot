@@ -13,17 +13,33 @@ config_version=5
 config/name="Godot Projection Mapper"
 config/description="A projection mapping tool built in Godot"
 config/tags=PackedStringArray("2d", "3d", "demo", "official", "rendering")
-run/main_scene="res://3d_in_2d.tscn"
+run/main_scene="res://window_editor.tscn"
 config/features=PackedStringArray("4.2")
 config/icon="res://icon.webp"
 
 [display]
 
+window/size/viewport_width=1366
+window/size/viewport_height=768
 window/size/mode=3
 window/size/resizable=false
 window/size/borderless=true
+window/subwindows/embed_subwindows=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[input]
+
+spawn_window_display={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"command_or_control_autoremap":true,"alt_pressed":false,"shift_pressed":false,"pressed":false,"keycode":0,"physical_keycode":80,"key_label":0,"unicode":0,"echo":false,"script":null)
+]
+}
+
+[layer_names]
+
+2d_render/layer_1="Default"
+2d_render/layer_2="Editor Only"
 
 [rendering]
 
