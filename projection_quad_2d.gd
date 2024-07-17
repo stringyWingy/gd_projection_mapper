@@ -4,6 +4,10 @@ extends MeshInstance2D
 @export var start_size : Vector2 = Vector2(200,200)
 @export var subdivision_resolution : Vector2 = Vector2(4,4)
 
+@onready var face_selector : Polygon2D = $face_selector
+
+signal face_clicked
+
 var xverts = subdivision_resolution.x + 1
 var yverts = subdivision_resolution.y + 1
 
@@ -16,12 +20,19 @@ var indices = PackedInt32Array()
 
 var needs_rebuild := false
 
+var editor_context = null
+
+func set_editor_context(context : Node) -> void:
+	editor_context = context
+
 
 func v3_v2(vec: Vector3) -> Vector2:
 	return Vector2(vec.x,vec.y)
+	
 
 func v2_v3(vec: Vector2) -> Vector3:
 	return Vector3(vec.x,vec.y,0)
+
 
 func init_mesh() -> void:
 	uvs.clear()
@@ -75,6 +86,13 @@ func init_mesh() -> void:
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
 	
+func rebuild_selector_polygon() -> void:
+	face_selector.set_polygon([
+		handles[0],
+		handles[1],
+		handles[3],
+		handles[2]
+	])
 
 func rebuild_positions() -> void:
 
@@ -90,9 +108,27 @@ func rebuild_positions() -> void:
 			var p = p1.lerp(p2, j/subdivision_resolution.y)
 			vertices.append(v2_v3(p))
 
-	mesh_data[ArrayMesh.ARRAY_VERTEX] = vertices
-	mesh_data[ArrayMesh.ARRAY_TEX_UV] = uvs
-	mesh_data[ArrayMesh.ARRAY_INDEX] =  indices
+	mesh.clear_surfaces()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
+
+func rebuild_uv() -> void:
+	uvs.clear()
+	var corners = []
+	corners[0] = uvs[0]
+	corners[1] = uvs[subdivision_resolution.x]
+	corners[2] = uvs[xverts * subdivision_resolution.y]
+	corners[3] = uvs[xverts * subdivision_resolution.y + subdivision_resolution.x]
+
+	for j in yverts:
+		for i in xverts:
+			#get positions along the 'top' and 'bottom' edges (in handle space) based on the x index coordinate of this vertex
+			var p1 = corners[0].lerp(corners[1], i/subdivision_resolution.x)
+			var p2 = corners[2].lerp(corners[3], i/subdivision_resolution.x)
+
+			#lerp between those two positions to create a y axis in handle space
+			var p = p1.lerp(p2, j/subdivision_resolution.y)
+			uvs.append(p)
+
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
 
@@ -107,21 +143,29 @@ func _ready():
 	handles = [
 		$vert_handle_0.position + $vert_handle_0.size/2,
 		$vert_handle_1.position + $vert_handle_1.size/2,
-        $vert_handle_2.position + $vert_handle_2.size/2,
-        $vert_handle_3.position + $vert_handle_3.size/2
+		$vert_handle_2.position + $vert_handle_2.size/2,
+		$vert_handle_3.position + $vert_handle_3.size/2
 	]
 
 	mesh = ArrayMesh.new()
 	mesh_data.resize(ArrayMesh.ARRAY_MAX)
 	init_mesh()
+	rebuild_selector_polygon()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if needs_rebuild:
 		rebuild_positions()
+		rebuild_selector_polygon()
 		needs_rebuild = false
+
 
 func on_vertex_handle_moved(index, local_position):
 	handles[index] = local_position
 	needs_rebuild = true
+
+
+func _on_face_selector_clicked():
+	face_clicked.emit()
+	

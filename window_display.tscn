@@ -22,6 +22,10 @@ canvas_cull_mask = 4294966273
 size = Vector2i(1366, 768)
 render_target_update_mode = 4
 
+[node name="DisplayCamera" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
 [node name="Label" type="Label" parent="."]
 offset_right = 62.0
 offset_bottom = 23.0
