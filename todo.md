@@ -1,4 +1,4 @@
 #TODO
 
 - implement limits while dragging vertices to prevent convex quad?
-- create an editor god to instantiate projector quads, keep track of selections, control highlighters, do the math on tranformations
+- defer selecting of vertices/faces so we can prioritize vertices from the currently selected face if there's an overlap. otherwise, an overlapping face always takes over
