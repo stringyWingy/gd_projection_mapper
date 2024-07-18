@@ -3,15 +3,19 @@ extends MeshInstance2D
 
 @export var start_size : Vector2 = Vector2(200,200)
 @export var subdivision_resolution : Vector2 = Vector2(4,4)
+@export var editor_context : Node
 
-@onready var face_selector : Polygon2D = $face_selector
+@onready var clickable_poly2D_script = preload("res://clickable_poly2D.gd")
+@onready var clickable_face : Polygon2D = $clickable_face
 
 signal face_clicked
+signal vertex_handle_clicked
 
 var xverts = subdivision_resolution.x + 1
 var yverts = subdivision_resolution.y + 1
 
 var mesh_data = []
+var handle_positions = []
 var handles = []
 
 var vertices = PackedVector3Array() 
@@ -20,10 +24,11 @@ var indices = PackedInt32Array()
 
 var needs_rebuild := false
 
-var editor_context = null
-
 func set_editor_context(context : Node) -> void:
 	editor_context = context
+	face_clicked.connect(editor_context._on_face_clicked)
+	for h in handles:
+		h.clicked.connect(editor_context._on_vertex_handle_clicked)
 
 
 func v3_v2(vec: Vector3) -> Vector2:
@@ -32,6 +37,38 @@ func v3_v2(vec: Vector3) -> Vector2:
 
 func v2_v3(vec: Vector2) -> Vector3:
 	return Vector3(vec.x,vec.y,0)
+
+
+func init_handles() -> void:
+	for c in find_children("handle_*"):
+		remove_child(c)
+		c.set_owner(null)
+
+	for i in range(4):
+		var nname = "handle_%s" % i
+		var h = Polygon2D.new()
+		h.set_script(clickable_poly2D_script)
+		h.name = nname
+		add_child(h)
+		handles.append(h)
+		h.set_owner(self)
+		h.color_highlight = Color("#ffff69")
+		h.color_normal = Color("#8f8f8f")
+		h.behavior = h.Behavior.COLORTOGGLE
+		h.set_visibility_layer(2)
+		h.set_polygon(
+			PackedVector2Array([
+				Vector2(-8,-8),
+				Vector2(8,-8),
+				Vector2(8,8),
+				Vector2(-8,8)
+			])
+		)
+
+	handles[0].position = Vector2(-start_size.x/2, -start_size.y/2) #top left
+	handles[1].position = Vector2(start_size.x/2, -start_size.y/2) #top right
+	handles[2].position = Vector2(-start_size.x/2, start_size.y/2) #bot left
+	handles[3].position = Vector2(start_size.x/2, start_size.y/2) #bot right
 
 
 func init_mesh() -> void:
@@ -87,11 +124,11 @@ func init_mesh() -> void:
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
 	
 func rebuild_selector_polygon() -> void:
-	face_selector.set_polygon([
-		handles[0],
-		handles[1],
-		handles[3],
-		handles[2]
+	clickable_face.set_polygon([
+		handles[0].position,
+		handles[1].position,
+		handles[3].position,
+		handles[2].position
 	])
 
 func rebuild_positions() -> void:
@@ -101,8 +138,8 @@ func rebuild_positions() -> void:
 	for j in yverts:
 		for i in xverts:
 			#get positions along the 'top' and 'bottom' edges (in handle space) based on the x index coordinate of this vertex
-			var p1 = handles[0].lerp(handles[1], i/subdivision_resolution.x)
-			var p2 = handles[2].lerp(handles[3], i/subdivision_resolution.x)
+			var p1 = handles[0].position.lerp(handles[1].position, i/subdivision_resolution.x)
+			var p2 = handles[2].position.lerp(handles[3].position, i/subdivision_resolution.x)
 
 			#lerp between those two positions to create a y axis in handle space
 			var p = p1.lerp(p2, j/subdivision_resolution.y)
@@ -134,23 +171,18 @@ func rebuild_uv() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#update handle positions in editor
-	$vert_handle_0.position = Vector2(-start_size.x/2, -start_size.y/2) - $vert_handle_0.size/2 #top left
-	$vert_handle_1.position = Vector2(start_size.x/2, -start_size.y/2) - $vert_handle_1.size/2 #top right
-	$vert_handle_2.position = Vector2(-start_size.x/2, start_size.y/2) - $vert_handle_2.size/2 #bot left
-	$vert_handle_3.position = Vector2(start_size.x/2, start_size.y/2) - $vert_handle_3.size/2 #bot right
 
-	handles = [
-		$vert_handle_0.position + $vert_handle_0.size/2,
-		$vert_handle_1.position + $vert_handle_1.size/2,
-		$vert_handle_2.position + $vert_handle_2.size/2,
-		$vert_handle_3.position + $vert_handle_3.size/2
-	]
+	init_handles()
+	for h in handles:
+		h.set_visible(false)
+		h.set_clickable(false)
+	rebuild_selector_polygon()
+	if editor_context != null:
+		set_editor_context(editor_context)
 
 	mesh = ArrayMesh.new()
 	mesh_data.resize(ArrayMesh.ARRAY_MAX)
 	init_mesh()
-	rebuild_selector_polygon()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -161,11 +193,5 @@ func _process(delta):
 		needs_rebuild = false
 
 
-func on_vertex_handle_moved(index, local_position):
-	handles[index] = local_position
-	needs_rebuild = true
-
-
-func _on_face_selector_clicked():
-	face_clicked.emit()
-	
+func _on_face_selector_clicked(face):
+	face_clicked.emit(self)
