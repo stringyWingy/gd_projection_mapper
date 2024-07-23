@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://vpoh8hw542lm"]
+[gd_scene load_steps=6 format=3 uid="uid://vpoh8hw542lm"]
 
 [ext_resource type="Script" path="res://window_editor.gd" id="1_16hpm"]
 [ext_resource type="PackedScene" uid="uid://xwkspajfdmd7" path="res://display_world.tscn" id="1_niy3p"]
+[ext_resource type="Theme" uid="uid://bih0ootcxjn7o" path="res://ui/ui_theme.tres" id="1_pmykl"]
 [ext_resource type="Script" path="res://editor_camera.gd" id="4_gx5we"]
+[ext_resource type="PackedScene" uid="uid://djyachogawdaa" path="res://ui/scene_item.tscn" id="5_euu47"]
 
 [node name="WindowEditor" type="Control"]
 layout_direction = 2
@@ -12,76 +14,93 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_pmykl")
 script = ExtResource("1_16hpm")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-split_offset = 200
+theme_type_variation = &"PanelContainerTop"
 
-[node name="TabContainer" type="TabContainer" parent="HSplitContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="PanelContainer"]
 layout_mode = 2
 
-[node name="UV" type="AspectRatioContainer" parent="HSplitContainer/TabContainer"]
-layout_mode = 2
-
-[node name="UV" type="SubViewportContainer" parent="HSplitContainer/TabContainer/UV"]
-layout_mode = 2
-
-[node name="SubViewport" type="SubViewport" parent="HSplitContainer/TabContainer/UV/UV"]
-handle_input_locally = false
-render_target_update_mode = 0
-
-[node name="Scenes" type="FlowContainer" parent="HSplitContainer/TabContainer"]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="Label" parent="HSplitContainer/TabContainer/Scenes"]
-layout_mode = 2
-text = "This is a scene selector
-"
-
-[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer"]
-layout_mode = 2
-split_offset = 700
-
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="HSplitContainer/VSplitContainer"]
+[node name="TabContainer" type="TabContainer" parent="PanelContainer/HSplitContainer"]
 clip_contents = true
 layout_mode = 2
-ratio = 1.7778
+size_flags_horizontal = 3
+current_tab = 1
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="HSplitContainer/VSplitContainer/AspectRatioContainer"]
+[node name="UV" type="SubViewportContainer" parent="PanelContainer/HSplitContainer/TabContainer"]
+visible = false
+clip_contents = true
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_pmykl")
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="HSplitContainer/VSplitContainer/AspectRatioContainer/SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="PanelContainer/HSplitContainer/TabContainer/UV"]
+handle_input_locally = false
+size = Vector2i(338, 697)
+render_target_update_mode = 0
+
+[node name="Scenes" type="FlowContainer" parent="PanelContainer/HSplitContainer/TabContainer"]
+layout_mode = 2
+
+[node name="SceneItem" parent="PanelContainer/HSplitContainer/TabContainer/Scenes" instance=ExtResource("5_euu47")]
+layout_mode = 2
+
+[node name="SceneItem2" parent="PanelContainer/HSplitContainer/TabContainer/Scenes" instance=ExtResource("5_euu47")]
+layout_mode = 2
+
+[node name="SceneItem3" parent="PanelContainer/HSplitContainer/TabContainer/Scenes" instance=ExtResource("5_euu47")]
+layout_mode = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="PanelContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.69
+theme_override_constants/minimum_grab_thickness = 4
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="PanelContainer/HSplitContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+theme = ExtResource("1_pmykl")
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="PanelContainer/HSplitContainer/VSplitContainer/SubViewportContainer"]
 handle_input_locally = false
 canvas_cull_mask = 4294966275
-size = Vector2i(2, 2)
+size = Vector2i(976, 592)
 render_target_update_mode = 4
 
-[node name="DisplayWorld" parent="HSplitContainer/VSplitContainer/AspectRatioContainer/SubViewportContainer/SubViewport" instance=ExtResource("1_niy3p")]
+[node name="DisplayWorld" parent="PanelContainer/HSplitContainer/VSplitContainer/SubViewportContainer/SubViewport" instance=ExtResource("1_niy3p")]
+unique_name_in_owner = true
 
-[node name="EditorCamera" type="Camera2D" parent="HSplitContainer/VSplitContainer/AspectRatioContainer/SubViewportContainer/SubViewport"]
+[node name="EditorCamera" type="Camera2D" parent="PanelContainer/HSplitContainer/VSplitContainer/SubViewportContainer/SubViewport"]
 editor_draw_limits = true
 editor_draw_drag_margin = true
 script = ExtResource("4_gx5we")
 
-[node name="FlowContainer" type="FlowContainer" parent="HSplitContainer/VSplitContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HSplitContainer/VSplitContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FlowContainer" type="FlowContainer" parent="PanelContainer/HSplitContainer/VSplitContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HSplitContainer/VSplitContainer/FlowContainer"]
+[node name="SceneItem" parent="PanelContainer/HSplitContainer/VSplitContainer/PanelContainer/FlowContainer" instance=ExtResource("5_euu47")]
 layout_mode = 2
-text = "This is a queued scene"
 
-[node name="Label2" type="Label" parent="HSplitContainer/VSplitContainer/FlowContainer"]
+[node name="SceneItem2" parent="PanelContainer/HSplitContainer/VSplitContainer/PanelContainer/FlowContainer" instance=ExtResource("5_euu47")]
 layout_mode = 2
-text = "This is a queued scene"
 
-[node name="Label3" type="Label" parent="HSplitContainer/VSplitContainer/FlowContainer"]
+[node name="SceneItem3" parent="PanelContainer/HSplitContainer/VSplitContainer/PanelContainer/FlowContainer" instance=ExtResource("5_euu47")]
 layout_mode = 2
-text = "This is a queued scene"

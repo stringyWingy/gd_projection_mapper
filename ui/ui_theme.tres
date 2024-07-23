@@ -1,0 +1,19 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://bih0ootcxjn7o"]
+
+[ext_resource type="StyleBox" uid="uid://7ddgh35w0pcu" path="res://ui/panel_dark_margin.tres" id="1_ny7fg"]
+[ext_resource type="StyleBox" uid="uid://jq2lrypf0ltl" path="res://ui/panel_scene_item.tres" id="2_b0ngk"]
+[ext_resource type="StyleBox" uid="uid://bkxb7q7l7c6c6" path="res://ui/panel_top.tres" id="3_2f1r0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enrn1"]
+bg_color = Color(0.1922, 0.237357, 0.31, 1)
+
+[resource]
+FlowContainer/constants/h_separation = 7
+FlowContainer/constants/v_separation = 9
+Panel/styles/panel = SubResource("StyleBoxFlat_enrn1")
+PanelContainer/styles/panel = ExtResource("1_ny7fg")
+PanelContainerFlush/base_type = &"PanelContainer"
+PanelContainerFlush/styles/panel = ExtResource("2_b0ngk")
+PanelContainerTop/base_type = &"PanelContainer"
+PanelContainerTop/styles/panel = ExtResource("3_2f1r0")
+TabContainer/styles/panel = ExtResource("1_ny7fg")

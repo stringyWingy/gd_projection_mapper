@@ -1,7 +1,7 @@
 extends Control
 
 var window_display = null
-@onready var subviewport = $HSplitContainer/VSplitContainer/AspectRatioContainer/SubViewportContainer/SubViewport
+@onready var display_world = $HSplitContainer/VSplitContainer/SubViewportContainer/SubViewport/DisplayWorld
 @onready var display_scene = preload("res://window_display.tscn")
 
 # Called when the node enters the scene tree for the first time.
@@ -21,6 +21,6 @@ func _input(event):
 			window_display = display_scene.instantiate()
 			window_display.set_name("WindowDisplay")
 			add_child(window_display)
-			window_display.find_child("SubViewport").world_2d = subviewport.world_2d
+			window_display.find_child("SubViewport").world_2d = display_world
 		
 		
