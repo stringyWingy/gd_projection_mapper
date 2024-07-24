@@ -1,4 +1,25 @@
 #TODO
 
-- implement limits while dragging vertices to prevent convex quad?
-- defer selecting of vertices/faces so we can prioritize vertices from the currently selected face if there's an overlap. otherwise, an overlapping face always takes over
+create viewables data representing the:
+- uv grid texture
+- spdsx 3d scene
+- example video texture
+
+also create views referencing the above
+
+create the editor angels/clients for the view queue, uv editor, and viewable browser ui windows
+
+implement loading in the viewable to the uv editor when clicking on a face in the display editor
+
+
+===
+
+- create an editor server that both the display world angel and the UV editor angel connect to and can pass data back and forth
+    - face selected, current UVs, current view/viewable
+    - uvs updated
+    - viewable updated
+    - new view created
+    - different view selected
+
+Editor server/god lives as node child of main window. however it is spawned as the instance of a singleton class.
+This way anyone who needs to can retrieve a reference to it at any time
