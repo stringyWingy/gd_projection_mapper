@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://g3qon6c7xytj"]
+[gd_scene load_steps=5 format=3 uid="uid://g3qon6c7xytj"]
 
 [ext_resource type="Script" path="res://projection_quad_2d.gd" id="1_0yffn"]
 [ext_resource type="Script" path="res://clickable_poly2D.gd" id="3_op5qt"]
+[ext_resource type="Script" path="res://outliner_2d.gd" id="3_re6rk"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_rbku0"]
 _surfaces = [{
@@ -23,11 +24,23 @@ script = ExtResource("1_0yffn")
 subdivision_resolution = Vector2(6, 6)
 
 [node name="clickable_face" type="Polygon2D" parent="."]
+visible = false
 visibility_layer = 2
 color = Color(1, 1, 0.411765, 0.196078)
 invert_border = 4.0
 polygon = PackedVector2Array(-100, -100, 100, -100, 100, 100, -100, 100)
 script = ExtResource("3_op5qt")
+
+[node name="outline" type="Line2D" parent="."]
+visibility_layer = 2
+z_index = 69
+points = PackedVector2Array(-100, -100, 100, -100, 100, 100, -100, 100)
+closed = true
+width = 1.0
+script = ExtResource("3_re6rk")
+color_highlight = Color(1, 1, 0.411765, 1)
+color_normal = Color(0.560784, 0.560784, 0.560784, 1)
+behavior = 1
 
 [node name="handle_0" type="Polygon2D" parent="."]
 visible = false

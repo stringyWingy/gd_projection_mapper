@@ -7,6 +7,7 @@ extends MeshInstance2D
 
 @onready var clickable_poly2D_script = preload("res://clickable_poly2D.gd")
 @onready var clickable_face : Polygon2D = $clickable_face
+@onready var outline : Line2D = $outline
 
 signal face_clicked
 signal vertex_handle_clicked
@@ -56,6 +57,7 @@ func init_handles() -> void:
 		h.color_normal = Color("#8f8f8f")
 		h.behavior = h.Behavior.COLORTOGGLE
 		h.set_visibility_layer(2)
+		h.z_index = 69
 		h.set_polygon(
 			PackedVector2Array([
 				Vector2(-8,-8),
@@ -69,6 +71,18 @@ func init_handles() -> void:
 	handles[1].position = Vector2(start_size.x/2, -start_size.y/2) #top right
 	handles[2].position = Vector2(-start_size.x/2, start_size.y/2) #bot left
 	handles[3].position = Vector2(start_size.x/2, start_size.y/2) #bot right
+
+
+func init_outline() -> void:
+	outline.color_highlight = Color("#ffff69")
+	outline.color_normal = Color("#8f8f8f")
+	outline.closed = true
+	outline.set_points([
+		handles[0].position,
+		handles[1].position,
+		handles[3].position,
+		handles[2].position
+	])
 
 
 func init_mesh() -> void:
@@ -130,6 +144,12 @@ func rebuild_selector_polygon() -> void:
 		handles[3].position,
 		handles[2].position
 	])
+	outline.set_points([
+		handles[0].position,
+		handles[1].position,
+		handles[3].position,
+		handles[2].position
+	])
 
 func rebuild_positions() -> void:
 
@@ -173,6 +193,7 @@ func rebuild_uv() -> void:
 func _ready():
 
 	init_handles()
+	init_outline()
 	for h in handles:
 		h.set_visible(false)
 		h.set_clickable(false)

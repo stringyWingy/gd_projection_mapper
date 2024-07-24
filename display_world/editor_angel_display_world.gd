@@ -14,6 +14,12 @@ var grabbing := false
 var mouse_grab_start_pos := Vector2(0,0)
 var verts_grab_start_pos := PackedVector2Array() 
 
+var deferred_face_click := false
+var deferred_face : Node2D
+
+var deferred_vertex_handle_click := false
+var deferred_vertex_handle : Node2D
+
 const grab_fine_scale = 0.5
 
 # Called when the node enters the scene tree for the first time.
@@ -33,6 +39,36 @@ func _process(delta):
 
 		for f in selected_faces:
 			f.needs_rebuild = true
+
+	elif deferred_vertex_handle_click:
+		var handle = deferred_vertex_handle
+		print("deferred vertex handle click on %s" % handle.name)
+
+		if Input.is_action_pressed("select_add") or selected_vertices.is_empty():
+			try_select_vertex(handle)
+		elif Input.is_action_pressed("select_sub"):
+			deselect_vertex(handle)
+		else:
+			deselect_all_vertices()
+			try_select_vertex(handle)
+
+	elif deferred_face_click:
+		var face = deferred_face
+		print("deferred face click on %s" % face.name)
+
+		if Input.is_action_pressed("select_add") or selected_faces.is_empty():
+			try_select_face(face)
+		elif Input.is_action_pressed("select_sub"):
+			deselect_face(face)
+		else:
+			if try_select_face(face):
+				deselect_all_faces()
+				try_select_face(face)
+
+	#if we have both deferred clicks, reset so we only handle the vertex click
+	deferred_face_click = false
+	deferred_vertex_handle_click = false
+
 			
 
 func _input(event):
@@ -72,6 +108,7 @@ func try_select_face(face) -> bool:
 	if not selected_faces.has(face):
 		selected_faces.append(face)
 		face.clickable_face.highlight()
+		face.outline.highlight()
 		for v in face.handles:
 			try_select_vertex(v)
 			v.set_clickable(true)
@@ -92,6 +129,7 @@ func try_select_vertex(vertex) -> bool:
 func deselect_face(face) -> void:
 	selected_faces.erase(face)
 	face.clickable_face.unhighlight()
+	face.outline.unhighlight()
 	for h in face.handles:
 		deselect_vertex(h)
 		h.set_clickable(false)
@@ -139,23 +177,21 @@ func cancel_grab() -> void:
 	grabbing = false
 
 #TODO: try deferring these signal responses so we can prioritize an active vertex click over an unselected face click
+
+func defer_face_clicked(face : Node2D) -> void:
+	deferred_face_click = true
+	deferred_face = face
+
+
+
+func defer_vertex_handle_clicked(handle: Node2D) -> void:
+	deferred_vertex_handle_click = true
+	deferred_vertex_handle = handle
+
+
+
 func _on_face_clicked(face : Node2D) -> void:
-	if grabbing: return
-	if Input.is_action_pressed("select_add") or selected_faces.is_empty():
-		try_select_face(face)
-	elif Input.is_action_pressed("select_sub"):
-		deselect_face(face)
-	else:
-		if try_select_face(face):
-			deselect_all_faces()
-			try_select_face(face)
+	defer_face_clicked(face)
 
 func _on_vertex_handle_clicked(handle : Node2D) -> void:
-	if grabbing: return
-	if Input.is_action_pressed("select_add") or selected_vertices.is_empty():
-		try_select_vertex(handle)
-	elif Input.is_action_pressed("select_sub"):
-		deselect_vertex(handle)
-	else:
-		deselect_all_vertices()
-		try_select_vertex(handle)
+	defer_vertex_handle_clicked(handle)
