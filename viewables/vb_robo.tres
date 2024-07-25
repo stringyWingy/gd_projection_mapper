@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Viewable" load_steps=3 format=3 uid="uid://b5tapdp66m637"]
+
+[ext_resource type="Texture2D" uid="uid://brwp8bimc75uu" path="res://icon.webp" id="1_5cxsg"]
+[ext_resource type="Script" path="res://ViewsDB/Viewable.gd" id="2_f15te"]
+
+[resource]
+resource_name = "vb_robo"
+script = ExtResource("2_f15te")
+name = "Robo"
+type = 2
+resource = ExtResource("1_5cxsg")

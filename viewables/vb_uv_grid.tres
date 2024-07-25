@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Viewable" load_steps=3 format=3 uid="uid://clmyeciaaoihq"]
+
+[ext_resource type="Texture2D" uid="uid://wd4e6vyklh4o" path="res://viewables/texture/uv_grid.webp" id="1_dfyli"]
+[ext_resource type="Script" path="res://ViewsDB/Viewable.gd" id="1_nke02"]
+
+[resource]
+resource_name = "vb_uv_grid"
+script = ExtResource("1_nke02")
+name = "UV Grid"
+type = 2
+resource = ExtResource("1_dfyli")

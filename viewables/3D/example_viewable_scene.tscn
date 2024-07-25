@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dc8prfnxh8rfl"]
+
+[ext_resource type="Script" path="res://viewables/3D/example_viewable_scene_3d.gd" id="1_f4uo6"]
+[ext_resource type="PackedScene" uid="uid://c74cnbf42ud32" path="res://gltf/spdsx.blend" id="1_qowlm"]
+
+[node name="ExampleViewableScene" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20.4104)
+script = ExtResource("1_f4uo6")
+
+[node name="spdsx" parent="." instance=ExtResource("1_qowlm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20.462)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.77843, 0.627732, 0, -0.627732, 0.77843, 0, 5.09494, -16.5975)
+light_energy = 9.142
+light_indirect_energy = 1.285
+spot_range = 13.3691
+spot_angle = 40.4313
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.670634, 0.741789, 0, -0.741789, 0.670634, 0, 3.53602, -17.2155)
+fov = 58.6
