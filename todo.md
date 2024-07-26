@@ -1,13 +1,13 @@
 #TODO
 
-create viewables data representing the:
-- uv grid texture
-- spdsx 3d scene
-- example video texture
+implement thumbnailer process for viewables of:
+[x] SCENE_3D
+[ ] SCENE_2D
+[ ] VIDEOSTREAM
+
+instead of manually creating a viewsDB resource, designate a folder to traverse for .tres files and populate the viewDB that way at runtime/compiletime
 
 also create views referencing the above
-
-create the editor angels/clients for the view queue, uv editor, and viewable browser ui windows
 
 implement loading in the viewable to the uv editor when clicking on a face in the display editor
 

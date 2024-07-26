@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Viewable" load_steps=3 format=3 uid="uid://d260j2o3wqysh"]
+
+[ext_resource type="Script" path="res://ViewsDB/Viewable.gd" id="1_anici"]
+[ext_resource type="VideoStream" path="res://viewables/texture/example_video.ogv" id="1_d65xw"]
+
+[resource]
+script = ExtResource("1_anici")
+name = "example_video"
+type = 3
+resource = ExtResource("1_d65xw")

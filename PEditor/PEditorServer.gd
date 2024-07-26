@@ -16,13 +16,22 @@ static func ref() -> PEditorServer:
 static func registerClient(client: PEditorClient) -> void:
 	ref()._registerClient(client)
 
+#static method to retrieve the thumbnailer
+static func getThumbnailer() -> Thumbnailer:
+	return ref().thumbnailer
+
 #references for the various clients we will connect
 var displayClient :	PEditorDisplayClient		= null
 var uvClient : PEditorUVClient					= null
 var viewablesClient : PEditorViewablesClient	= null
 var viewsClient : PEditorViewsClient			= null
 
+var thumbnailer := Thumbnailer.new()
+
 var active_face : Node2D
+
+func _ready():
+	add_child(thumbnailer)
 
 func _registerClient(client: PEditorClient) -> void:
 	match client.type:

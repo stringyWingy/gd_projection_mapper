@@ -1,13 +1,17 @@
-[gd_resource type="Resource" script_class="ViewsDB" load_steps=4 format=3 uid="uid://bqikwcy6e27ds"]
+[gd_resource type="Resource" script_class="ViewsDB" load_steps=6 format=3 uid="uid://bqikwcy6e27ds"]
 
 [ext_resource type="Script" path="res://ViewsDB/ViewsDB.gd" id="1_kbw8d"]
 [ext_resource type="Resource" uid="uid://clmyeciaaoihq" path="res://viewables/vb_uv_grid.tres" id="2_r78lu"]
 [ext_resource type="Resource" uid="uid://b5tapdp66m637" path="res://viewables/vb_robo.tres" id="3_rtjwv"]
+[ext_resource type="Resource" uid="uid://vy4bc4cv0uh4" path="res://viewables/vb_spdsx.tres" id="4_co3uh"]
+[ext_resource type="Resource" uid="uid://d260j2o3wqysh" path="res://viewables/vb_example_video.tres" id="5_7jbl3"]
 
 [resource]
 script = ExtResource("1_kbw8d")
 viewables = {
 "UV Grid": ExtResource("2_r78lu"),
-"robo": ExtResource("3_rtjwv")
+"example video": ExtResource("5_7jbl3"),
+"robo": ExtResource("3_rtjwv"),
+"spdsx": ExtResource("4_co3uh")
 }
 views = {}

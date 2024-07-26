@@ -38,7 +38,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 current_tab = 1
 
-[node name="UVContainer" type="SubViewportContainer" parent="PanelContainer/HSplitContainer/TabContainer"]
+[node name="UV" type="SubViewportContainer" parent="PanelContainer/HSplitContainer/TabContainer"]
 visible = false
 clip_contents = true
 layout_mode = 2
@@ -47,28 +47,28 @@ size_flags_vertical = 4
 theme = ExtResource("1_pmykl")
 stretch = true
 
-[node name="UVViewport" type="SubViewport" parent="PanelContainer/HSplitContainer/TabContainer/UVContainer"]
+[node name="UVViewport" type="SubViewport" parent="PanelContainer/HSplitContainer/TabContainer/UV"]
 handle_input_locally = false
-size = Vector2i(338, 697)
+size = Vector2i(2, 2)
 render_target_update_mode = 0
 
-[node name="UVCamera" type="Camera2D" parent="PanelContainer/HSplitContainer/TabContainer/UVContainer/UVViewport"]
+[node name="UVCamera" type="Camera2D" parent="PanelContainer/HSplitContainer/TabContainer/UV/UVViewport"]
 editor_draw_limits = true
 editor_draw_drag_margin = true
 script = ExtResource("4_gx5we")
 
-[node name="ViewSprite" type="Sprite2D" parent="PanelContainer/HSplitContainer/TabContainer/UVContainer/UVViewport"]
+[node name="ViewSprite" type="Sprite2D" parent="PanelContainer/HSplitContainer/TabContainer/UV/UVViewport"]
 texture = ExtResource("4_fp0co")
 
-[node name="CurrentView" type="SubViewport" parent="PanelContainer/HSplitContainer/TabContainer/UVContainer/UVViewport"]
+[node name="CurrentView" type="SubViewport" parent="PanelContainer/HSplitContainer/TabContainer/UV/UVViewport"]
 
-[node name="PEditorUVClient" type="Node" parent="PanelContainer/HSplitContainer/TabContainer/UVContainer/UVViewport"]
+[node name="PEditorUVClient" type="Node" parent="PanelContainer/HSplitContainer/TabContainer/UV/UVViewport"]
 script = ExtResource("5_vedyu")
 
-[node name="Scenes" type="FlowContainer" parent="PanelContainer/HSplitContainer/TabContainer"]
+[node name="Viewables" type="FlowContainer" parent="PanelContainer/HSplitContainer/TabContainer"]
 layout_mode = 2
 
-[node name="SceneItem" parent="PanelContainer/HSplitContainer/TabContainer/Scenes" instance=ExtResource("5_euu47")]
+[node name="SceneItem" parent="PanelContainer/HSplitContainer/TabContainer/Viewables" instance=ExtResource("5_euu47")]
 layout_mode = 2
 
 [node name="PEditorViewablesClient" type="Node" parent="PanelContainer/HSplitContainer/TabContainer"]

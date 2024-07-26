@@ -1,7 +1,7 @@
 class_name PEditorViewablesClient
 extends PEditorClient
 
-@onready var ui_viewables_parent = $"../Scenes"
+@onready var ui_viewables_parent = $"../Viewables"
 var scene_tile_tscn = preload("res://ui/scene_item.tscn")
 var viewables = preload("res://ViewsDB/ViewsDB.tres").viewables
 
@@ -13,7 +13,7 @@ func refresh():
       c.queue_free()
 
    for v in viewables:
-      viewables[v].refreshThumbnail()
+      await viewables[v].setThumbnail()
       add_ui_tile_from_viewable(viewables[v])
    
 
