@@ -4,11 +4,14 @@ var window_display = null
 @onready var display_world =  $PanelContainer/HSplitContainer/VSplitContainer/DisplayWorldContainer/DisplayWorldViewport.world_2d
 @onready var display_scene = preload("res://window_display.tscn")
 
+var pEditorServer = PEditorServer.ref()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.size = get_viewport().size
 
 	get_viewport().set_embedding_subwindows(false)
+	add_child(pEditorServer)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

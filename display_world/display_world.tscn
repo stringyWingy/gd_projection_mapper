@@ -1,53 +1,10 @@
-[gd_scene load_steps=16 format=3 uid="uid://xwkspajfdmd7"]
+[gd_scene load_steps=10 format=3 uid="uid://xwkspajfdmd7"]
 
 [ext_resource type="Script" path="res://display_world/display_world.gd" id="1_8mkex"]
-[ext_resource type="PackedScene" uid="uid://8nlipuu0ceal" path="res://robot_3d.tscn" id="2_a5okm"]
-[ext_resource type="Texture2D" uid="uid://q5bonn8iowbc" path="res://robot_demo.png" id="3_afpij"]
+[ext_resource type="PackedScene" uid="uid://dc8prfnxh8rfl" path="res://viewables/3D/example_viewable_scene.tscn" id="2_6yysv"]
+[ext_resource type="VideoStream" path="res://viewables/texture/example_video.ogv" id="3_yvb8u"]
 [ext_resource type="PackedScene" uid="uid://g3qon6c7xytj" path="res://projection_quad_2d.tscn" id="4_ae60v"]
-[ext_resource type="Script" path="res://display_world/editor_angel_display_world.gd" id="5_g2uju"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k4ojb"]
-atlas = ExtResource("3_afpij")
-region = Rect2(0, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_unt57"]
-atlas = ExtResource("3_afpij")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_nh7fe"]
-atlas = ExtResource("3_afpij")
-region = Rect2(128, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xas8j"]
-atlas = ExtResource("3_afpij")
-region = Rect2(192, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_c34mc"]
-atlas = ExtResource("3_afpij")
-region = Rect2(256, 0, 64, 64)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_pbtva"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_k4ojb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_unt57")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_nh7fe")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xas8j")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_c34mc")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
+[ext_resource type="Script" path="res://PEditor/PEditorDisplayClient.gd" id="5_g2uju"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_on8e4"]
 _surfaces = [{
@@ -62,7 +19,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 200, 194, 0, 0, 200, 194, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 194, 85, 85, 133, 194, 0, 0, 0, 0, 85, 85, 133, 194, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 5, 194, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 88, 85, 5, 66, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 133, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 5, 194, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 88, 85, 5, 66, 0, 0, 0, 0, 85, 85, 133, 194, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 5, 194, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 88, 85, 5, 66, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 133, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 133, 66, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 200, 66, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 66, 0, 0, 0, 0)
 }]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_2s4wv"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_3uq5l"]
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_a750g"]
@@ -78,8 +35,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 200, 194, 0, 0, 200, 194, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 194, 85, 85, 133, 194, 0, 0, 0, 0, 85, 85, 133, 194, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 5, 194, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 88, 85, 5, 66, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 133, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 5, 194, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 88, 85, 5, 66, 0, 0, 0, 0, 85, 85, 133, 194, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 5, 194, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 88, 85, 5, 66, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 133, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 133, 66, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 200, 66, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 66, 0, 0, 0, 0)
 }]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_a7ooo"]
-viewport_path = NodePath("SubViewport2")
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_2wbp4"]
 
 [node name="DisplayWorld" type="Node2D"]
 script = ExtResource("1_8mkex")
@@ -87,34 +43,39 @@ script = ExtResource("1_8mkex")
 [node name="SubViewport1" type="SubViewport" parent="."]
 transparent_bg = true
 msaa_3d = 1
-size = Vector2i(300, 300)
+size = Vector2i(1024, 1024)
 render_target_update_mode = 4
 
-[node name="Robot3D" parent="SubViewport1" instance=ExtResource("2_a5okm")]
+[node name="ExampleViewableScene" parent="SubViewport1" instance=ExtResource("2_6yysv")]
 
 [node name="SubViewport2" type="SubViewport" parent="."]
 transparent_bg = true
 msaa_3d = 1
-size = Vector2i(300, 300)
+size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewport2"]
-sprite_frames = SubResource("SpriteFrames_pbtva")
-
-[node name="Camera2D" type="Camera2D" parent="SubViewport2"]
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="SubViewport2"]
+offset_right = 40.0
+offset_bottom = 40.0
+stream = ExtResource("3_yvb8u")
+volume_db = -80.0
+autoplay = true
+loop = true
 
 [node name="DemoQuad1" parent="." node_paths=PackedStringArray("editor_context") instance=ExtResource("4_ae60v")]
 position = Vector2(-125, 0)
 mesh = SubResource("ArrayMesh_on8e4")
-texture = SubResource("ViewportTexture_2s4wv")
-editor_context = NodePath("../EditorAngel")
+texture = SubResource("ViewportTexture_3uq5l")
+subdivision_resolution = Vector2(10, 10)
+editor_context = NodePath("../EditorClient")
 
 [node name="DemoQuad2" parent="." node_paths=PackedStringArray("editor_context") instance=ExtResource("4_ae60v")]
 position = Vector2(125, 1)
 mesh = SubResource("ArrayMesh_a750g")
-texture = SubResource("ViewportTexture_a7ooo")
-editor_context = NodePath("../EditorAngel")
+texture = SubResource("AnimatedTexture_2wbp4")
+start_size = Vector2(355.4, 200)
+editor_context = NodePath("../EditorClient")
 
-[node name="EditorAngel" type="Node" parent="."]
+[node name="EditorClient" type="Node" parent="."]
 process_priority = -777
 script = ExtResource("5_g2uju")

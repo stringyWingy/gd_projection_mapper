@@ -1,4 +1,9 @@
-extends Node
+class_name PEditorDisplayClient
+extends PEditorClient
+
+signal face_selected
+signal face_created
+signal face_deleted
 
 @onready var display_world = get_parent()
 
@@ -6,6 +11,9 @@ extends Node
 	$"../DemoQuad1",
 	$"../DemoQuad2"
 ]
+
+var type = "display"
+
 var selected_faces = []
 var selected_vertices = []
 var projection_quad_tscn = preload("res://projection_quad_2d.tscn")
@@ -24,7 +32,8 @@ const grab_fine_scale = 0.5
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	#hook this client into the editor server and let the server hook up the signals
+	PEditorServer.registerClient(self)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -109,6 +118,7 @@ func try_select_face(face) -> bool:
 		selected_faces.append(face)
 		face.clickable_face.highlight()
 		face.outline.highlight()
+		face_selected.emit(face)
 		for v in face.handles:
 			try_select_vertex(v)
 			v.set_clickable(true)

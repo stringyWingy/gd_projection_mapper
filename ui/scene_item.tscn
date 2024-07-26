@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://djyachogawdaa"]
+[gd_scene load_steps=4 format=3 uid="uid://djyachogawdaa"]
 
 [ext_resource type="Theme" uid="uid://bih0ootcxjn7o" path="res://ui/ui_theme.tres" id="1_gx76m"]
+[ext_resource type="Script" path="res://ui/scene_item.gd" id="2_aevxt"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ssvvm"]
-size = Vector2(160, 90)
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v2rbh"]
 
 [node name="PanelContainer" type="PanelContainer"]
 clip_contents = true
@@ -12,13 +12,18 @@ offset_right = 160.0
 offset_bottom = 141.0
 theme = ExtResource("1_gx76m")
 theme_type_variation = &"PanelContainerFlush"
+script = ExtResource("2_aevxt")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(160, 90)
 layout_mode = 2
-texture = SubResource("PlaceholderTexture2D_ssvvm")
+texture = SubResource("PlaceholderTexture2D_v2rbh")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 16)

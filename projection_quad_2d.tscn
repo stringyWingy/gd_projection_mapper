@@ -45,6 +45,7 @@ behavior = 1
 [node name="handle_0" type="Polygon2D" parent="."]
 visible = false
 visibility_layer = 2
+z_index = 69
 position = Vector2(-100, -100)
 polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 script = ExtResource("3_op5qt")
@@ -54,6 +55,7 @@ behavior = 1
 
 [node name="handle_1" type="Polygon2D" parent="."]
 visibility_layer = 2
+z_index = 69
 position = Vector2(100, -100)
 polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 script = ExtResource("3_op5qt")
@@ -63,6 +65,7 @@ behavior = 1
 
 [node name="handle_2" type="Polygon2D" parent="."]
 visibility_layer = 2
+z_index = 69
 position = Vector2(-100, 100)
 polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 script = ExtResource("3_op5qt")
@@ -72,6 +75,7 @@ behavior = 1
 
 [node name="handle_3" type="Polygon2D" parent="."]
 visibility_layer = 2
+z_index = 69
 position = Vector2(100, 100)
 polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 script = ExtResource("3_op5qt")
