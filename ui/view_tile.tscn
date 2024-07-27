@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://djyachogawdaa"]
 
-[ext_resource type="Theme" uid="uid://bih0ootcxjn7o" path="res://ui/ui_theme.tres" id="1_gx76m"]
-[ext_resource type="Script" path="res://ui/scene_item.gd" id="2_aevxt"]
+[ext_resource type="Theme" uid="uid://bih0ootcxjn7o" path="res://ui/ui_theme.tres" id="1_ijy6p"]
+[ext_resource type="Script" path="res://ui/view_tile.gd" id="2_nw4hu"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_v2rbh"]
 
@@ -10,9 +10,9 @@ clip_contents = true
 offset_top = 121.0
 offset_right = 160.0
 offset_bottom = 141.0
-theme = ExtResource("1_gx76m")
+theme = ExtResource("1_ijy6p")
 theme_type_variation = &"PanelContainerFlush"
-script = ExtResource("2_aevxt")
+script = ExtResource("2_nw4hu")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -29,8 +29,15 @@ stretch_mode = 6
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_vertical = 8
-theme = ExtResource("1_gx76m")
+theme = ExtResource("1_ijy6p")
 text = "Scene Name
 "
 horizontal_alignment = 1
 text_overrun_behavior = 3
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+theme_type_variation = &"ButtonSceneItem"
+toggle_mode = true
+shortcut_feedback = false
+shortcut_in_tooltip = false

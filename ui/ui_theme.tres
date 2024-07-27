@@ -1,13 +1,24 @@
-[gd_resource type="Theme" load_steps=5 format=3 uid="uid://bih0ootcxjn7o"]
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://bih0ootcxjn7o"]
 
+[ext_resource type="StyleBox" uid="uid://xhjenhqott2j" path="res://ui/view_tile_btn_hover.tres" id="1_1tcol"]
 [ext_resource type="StyleBox" uid="uid://7ddgh35w0pcu" path="res://ui/panel_dark_margin.tres" id="1_ny7fg"]
+[ext_resource type="StyleBox" uid="uid://qjg1g1t6m01y" path="res://ui/view_tile_btn_highlight.tres" id="2_1o1da"]
 [ext_resource type="StyleBox" uid="uid://jq2lrypf0ltl" path="res://ui/panel_scene_item.tres" id="2_b0ngk"]
 [ext_resource type="StyleBox" uid="uid://bkxb7q7l7c6c6" path="res://ui/panel_top.tres" id="3_2f1r0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0guxo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v3gxp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enrn1"]
 bg_color = Color(0.1922, 0.237357, 0.31, 1)
 
 [resource]
+ButtonSceneItem/base_type = &"Button"
+ButtonSceneItem/styles/focus = SubResource("StyleBoxEmpty_0guxo")
+ButtonSceneItem/styles/hover = ExtResource("1_1tcol")
+ButtonSceneItem/styles/normal = SubResource("StyleBoxEmpty_v3gxp")
+ButtonSceneItem/styles/pressed = ExtResource("2_1o1da")
 FlowContainer/constants/h_separation = 7
 FlowContainer/constants/v_separation = 9
 Panel/styles/panel = SubResource("StyleBoxFlat_enrn1")

@@ -2,8 +2,9 @@ class_name PEditorViewablesClient
 extends PEditorClient
 
 @onready var ui_viewables_parent = $"../Viewables"
-var scene_tile_tscn = preload("res://ui/scene_item.tscn")
+var view_tile_tscn = preload("res://ui/view_tile.tscn")
 var viewables = preload("res://ViewsDB/ViewsDB.tres").viewables
+var viewables_button_group = preload("res://ui/btn_grp_viewables.tres")
 
 #remove and delete all children of the ui node
 #then repopulate them using the data from the viewables DB
@@ -19,11 +20,16 @@ func refresh():
 
 
 func add_ui_tile_from_viewable(viewable : Viewable):
-   var i = scene_tile_tscn.instantiate()
+   var i = view_tile_tscn.instantiate()
    ui_viewables_parent.add_child(i)
-   i.setFromViewable(viewable)
+   i.set_from_viewable(viewable)
+   i.set_button_group(viewables_button_group)
 
 
 func _ready():
    #load up the existing views in the ViewsDB tres
    refresh()
+   viewables_button_group.connect("pressed", _on_scene_tile_selected)
+
+func _on_scene_tile_selected(button : BaseButton):
+   print("the selected viewable tile is %s" % button.owner.find_child("Label").text)

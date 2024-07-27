@@ -5,7 +5,7 @@
 [ext_resource type="Theme" uid="uid://bih0ootcxjn7o" path="res://ui/ui_theme.tres" id="1_pmykl"]
 [ext_resource type="Texture2D" uid="uid://wd4e6vyklh4o" path="res://viewables/texture/uv_grid.webp" id="4_fp0co"]
 [ext_resource type="Script" path="res://editor_camera.gd" id="4_gx5we"]
-[ext_resource type="PackedScene" uid="uid://djyachogawdaa" path="res://ui/scene_item.tscn" id="5_euu47"]
+[ext_resource type="PackedScene" uid="uid://djyachogawdaa" path="res://ui/view_tile.tscn" id="5_euu47"]
 [ext_resource type="Script" path="res://PEditor/PEditorUVClient.gd" id="5_vedyu"]
 [ext_resource type="Script" path="res://PEditor/PEditorViewablesClient.gd" id="7_6sbsi"]
 
