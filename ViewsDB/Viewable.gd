@@ -31,4 +31,7 @@ func setThumbnail():
 				print("loaded cached thumbnail for viewable %s" % name)
 
 			thumbnail = ImageTexture.create_from_image(image)
-			
+
+func set_thumbnail(image : Image):
+	thumbnail = ImageTexture.create_from_image(image)
+	

@@ -31,9 +31,12 @@ func capture_thumbnail_of(viewable : Viewable) -> Image:
 			newChild.stream = viewable.resource
 			newChild.size = thumbnail_res
 			newChild.volume = 0
-			newChild.play()
+			newChild.autoplay = true
+			#VideoStreamPlayer must be added to scene tree to trigger autoplay i guess
+			add_child(newChild)
 			await RenderingServer.frame_post_draw
 			thumbnail = newChild.get_video_texture().get_image()
+			remove_child(newChild)
 			newChild.stop()
 			newChild.queue_free()
 			pass
