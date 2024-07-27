@@ -5,7 +5,7 @@ extends MeshInstance2D
 @export var subdivision_resolution : Vector2 = Vector2(4,4)
 @export var editor_context : Node
 
-@onready var clickable_poly2D_script = preload("res://clickable_poly2D.gd")
+@onready var clickable_poly2D_script = preload("res://projection_quad/clickable_poly2D.gd")
 @onready var clickable_face : Polygon2D = $clickable_face
 @onready var outline : Line2D = $outline
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://g3qon6c7xytj"]
 
-[ext_resource type="Script" path="res://projection_quad_2d.gd" id="1_0yffn"]
-[ext_resource type="Script" path="res://clickable_poly2D.gd" id="3_op5qt"]
+[ext_resource type="Script" path="res://projection_quad/projection_quad_2d.gd" id="1_0yffn"]
+[ext_resource type="Script" path="res://projection_quad/clickable_poly2D.gd" id="3_op5qt"]
 [ext_resource type="Script" path="res://outliner_2d.gd" id="3_re6rk"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_rbku0"]

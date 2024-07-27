@@ -16,7 +16,7 @@ var type = "display"
 
 var selected_faces = []
 var selected_vertices = []
-var projection_quad_tscn = preload("res://projection_quad_2d.tscn")
+var projection_quad_tscn = preload("res://projection_quad/projection_quad_2d.tscn")
 
 var grabbing := false
 var mouse_grab_start_pos := Vector2(0,0)
