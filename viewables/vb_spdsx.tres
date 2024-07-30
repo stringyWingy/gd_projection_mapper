@@ -5,6 +5,6 @@
 
 [resource]
 script = ExtResource("1_s4xkl")
-name = "spdsx"
+viewable_name = "spdsx"
 type = 1
 resource = ExtResource("1_0l82a")

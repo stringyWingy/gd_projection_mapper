@@ -27,11 +27,18 @@ var viewablesClient : PEditorViewablesClient	= null
 var viewsClient : PEditorViewsClient			= null
 
 var thumbnailer := Thumbnailer.new()
+var popup_rename : PopupRename
 
 var active_face : Node2D
+var selected_view : View = null
+var stashed_view : View
 
 func _ready():
 	add_child(thumbnailer)
+	get_viewport().set_embedding_subwindows(true)
+	popup_rename = preload("res://ui/popup_new_name.tscn").instantiate()
+	add_child(popup_rename)
+
 
 func _registerClient(client: PEditorClient) -> void:
 	match client.type:
@@ -70,6 +77,7 @@ func _on_uv_update(uvs : PackedVector2Array):
 func _on_viewable_selected(viewable : Viewable):
 	#swap the selected viewable into the current view
 	#notify the view queue ui and the current face
+	selected_view.viewable = viewable
 	pass
 
 
@@ -77,8 +85,11 @@ func _on_view_activated(view : View):
 	#stash the view's current settings so we can revert changes easily
 	pass
 
+func _on_view_replace_viewable(viewable : Viewable):
+	#swap the viewable of the active view to the new one and commit the change
+	selected_view.viewable = viewable
 
-func _on_queue_view_add(view : View):
+func _on_new_view(view : View):
 	#add the view parameters to the views db / collection of views on current face
 	#create the thumbnail for it
 	#notify the view queue ui of the change

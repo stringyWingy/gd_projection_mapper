@@ -28,3 +28,4 @@ PanelContainerFlush/styles/panel = ExtResource("2_b0ngk")
 PanelContainerTop/base_type = &"PanelContainer"
 PanelContainerTop/styles/panel = ExtResource("3_2f1r0")
 TabContainer/styles/panel = ExtResource("1_ny7fg")
+TextEdit/font_sizes/font_size = 16

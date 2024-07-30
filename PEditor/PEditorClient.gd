@@ -1,2 +1,2 @@
 class_name PEditorClient
-extends Node
+extends Control

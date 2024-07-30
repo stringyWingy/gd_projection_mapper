@@ -1,9 +1,13 @@
 #TODO
 
+figure out why the rename popup is just showing a black rectangle
+
+===
+
 implement thumbnailer process for viewables of:
 [x] SCENE_3D
 [ ] SCENE_2D
-[ ] VIDEOSTREAM
+[x] VIDEOSTREAM
 
 instead of manually creating a viewsDB resource, designate a folder to traverse for .tres files and populate the viewDB that way at runtime/compiletime
 

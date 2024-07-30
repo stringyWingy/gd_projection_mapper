@@ -10,7 +10,6 @@ var pEditorServer = PEditorServer.ref()
 func _ready():
 	self.size = get_viewport().size
 
-	get_viewport().set_embedding_subwindows(false)
 	add_child(pEditorServer)
 
 
@@ -21,6 +20,7 @@ func _process(delta):
 func _input(event):
 	if event.is_action_pressed("spawn_window_display"):
 		if window_display ==  null:
+			get_viewport().set_embedding_subwindows(false)
 			window_display = display_scene.instantiate()
 			window_display.set_name("WindowDisplay")
 			add_child(window_display)

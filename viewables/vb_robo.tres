@@ -6,6 +6,6 @@
 [resource]
 resource_name = "vb_robo"
 script = ExtResource("2_f15te")
-name = "Robo"
+viewable_name = "robo"
 type = 2
 resource = ExtResource("1_5cxsg")

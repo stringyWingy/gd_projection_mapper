@@ -5,6 +5,6 @@
 
 [resource]
 script = ExtResource("1_anici")
-name = "example_video"
+viewable_name = "example video"
 type = 3
 resource = ExtResource("1_d65xw")

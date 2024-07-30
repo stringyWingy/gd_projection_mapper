@@ -6,6 +6,6 @@
 [resource]
 resource_name = "vb_uv_grid"
 script = ExtResource("1_nke02")
-name = "UV Grid"
+viewable_name = "uv grid"
 type = 2
 resource = ExtResource("1_dfyli")
