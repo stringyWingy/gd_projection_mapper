@@ -5,11 +5,11 @@ signal face_selected
 signal face_created
 signal face_deleted
 
-@onready var display_world = get_parent()
+@onready var display_world = $DisplayWorldViewport/DisplayWorld
 
 @onready var faces = [
-	$"../DemoQuad1",
-	$"../DemoQuad2"
+	$DisplayWorldViewport/DisplayWorld/DemoQuad1,
+	$DisplayWorldViewport/DisplayWorld/DemoQuad2,
 ]
 
 var type = "display"
@@ -34,6 +34,11 @@ const grab_fine_scale = 0.5
 func _ready():
 	#hook this client into the editor server and let the server hook up the signals
 	PEditorServer.registerClient(self)
+	for f in faces:
+		f.set_editor_context(self)
+	print("PEditorDisplayClient")
+	print(faces)
+	print(display_world)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -186,12 +191,9 @@ func cancel_grab() -> void:
 
 	grabbing = false
 
-#TODO: try deferring these signal responses so we can prioritize an active vertex click over an unselected face click
-
 func defer_face_clicked(face : Node2D) -> void:
 	deferred_face_click = true
 	deferred_face = face
-
 
 
 func defer_vertex_handle_clicked(handle: Node2D) -> void:
@@ -199,9 +201,9 @@ func defer_vertex_handle_clicked(handle: Node2D) -> void:
 	deferred_vertex_handle = handle
 
 
-
 func _on_face_clicked(face : Node2D) -> void:
 	defer_face_clicked(face)
+
 
 func _on_vertex_handle_clicked(handle : Node2D) -> void:
 	defer_vertex_handle_clicked(handle)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://vpoh8hw542lm"]
+[gd_scene load_steps=11 format=3 uid="uid://vpoh8hw542lm"]
 
 [ext_resource type="Script" path="res://window_editor.gd" id="1_16hpm"]
 [ext_resource type="PackedScene" uid="uid://xwkspajfdmd7" path="res://display_world/display_world.tscn" id="1_niy3p"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://PEditor/PEditorUVClient.gd" id="5_vedyu"]
 [ext_resource type="Script" path="res://PEditor/PEditorViewablesClient.gd" id="7_6sbsi"]
 [ext_resource type="PackedScene" uid="uid://claeynuscvrwn" path="res://ui/ui_new_or_replace_view.tscn" id="8_qj0bx"]
+[ext_resource type="Script" path="res://PEditor/PEditorDisplayClient.gd" id="9_1yxh0"]
 
 [node name="WindowEditor" type="Control"]
 layout_direction = 2
@@ -92,6 +93,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
 theme = ExtResource("1_pmykl")
 stretch = true
+script = ExtResource("9_1yxh0")
 
 [node name="DisplayWorldViewport" type="SubViewport" parent="PanelContainer/HSplitContainer/VSplitContainer/DisplayWorldContainer"]
 handle_input_locally = false

@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://xwkspajfdmd7"]
+[gd_scene load_steps=9 format=3 uid="uid://xwkspajfdmd7"]
 
 [ext_resource type="Script" path="res://display_world/display_world.gd" id="1_8mkex"]
 [ext_resource type="PackedScene" uid="uid://dc8prfnxh8rfl" path="res://viewables/3D/example_viewable_scene.tscn" id="2_6yysv"]
 [ext_resource type="VideoStream" path="res://viewables/texture/example_video.ogv" id="3_yvb8u"]
 [ext_resource type="PackedScene" uid="uid://g3qon6c7xytj" path="res://projection_quad/projection_quad_2d.tscn" id="4_qosig"]
-[ext_resource type="Script" path="res://PEditor/PEditorDisplayClient.gd" id="5_g2uju"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_on8e4"]
 _surfaces = [{
@@ -19,7 +18,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 200, 194, 0, 0, 200, 194, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 194, 85, 85, 133, 194, 0, 0, 0, 0, 85, 85, 133, 194, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 5, 194, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 88, 85, 5, 66, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 133, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 5, 194, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 88, 85, 5, 66, 0, 0, 0, 0, 85, 85, 133, 194, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 5, 194, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 88, 85, 5, 66, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 133, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 133, 66, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 200, 66, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 66, 0, 0, 0, 0)
 }]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_afm68"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_oi1e5"]
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_a750g"]
@@ -62,22 +61,14 @@ volume_db = -80.0
 autoplay = true
 loop = true
 
-[node name="DemoQuad1" parent="." node_paths=PackedStringArray("editor_context") instance=ExtResource("4_qosig")]
+[node name="DemoQuad1" parent="." instance=ExtResource("4_qosig")]
 position = Vector2(-125, 0)
 mesh = SubResource("ArrayMesh_on8e4")
-texture = SubResource("ViewportTexture_afm68")
+texture = SubResource("ViewportTexture_oi1e5")
 subdivision_resolution = Vector2(10, 10)
-editor_context = NodePath("../EditorClient")
 
-[node name="DemoQuad2" parent="." node_paths=PackedStringArray("editor_context") instance=ExtResource("4_qosig")]
+[node name="DemoQuad2" parent="." instance=ExtResource("4_qosig")]
 position = Vector2(125, 1)
 mesh = SubResource("ArrayMesh_a750g")
 texture = SubResource("AnimatedTexture_2wbp4")
 start_size = Vector2(355.4, 200)
-editor_context = NodePath("../EditorClient")
-
-[node name="EditorClient" type="Control" parent="."]
-process_priority = -777
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("5_g2uju")
