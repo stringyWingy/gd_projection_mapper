@@ -85,7 +85,7 @@ func _process(delta):
 
 			
 
-func _input(event):
+func _gui_input(event):
 	if event.is_action_pressed("grab"):
 		begin_grab()
 	elif event.is_action_pressed("left_click"):
