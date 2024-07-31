@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://vpoh8hw542lm"]
+[gd_scene load_steps=12 format=3 uid="uid://vpoh8hw542lm"]
 
 [ext_resource type="Script" path="res://window_editor.gd" id="1_16hpm"]
 [ext_resource type="PackedScene" uid="uid://xwkspajfdmd7" path="res://display_world/display_world.tscn" id="1_niy3p"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://PEditor/PEditorViewablesClient.gd" id="7_6sbsi"]
 [ext_resource type="PackedScene" uid="uid://claeynuscvrwn" path="res://ui/ui_new_or_replace_view.tscn" id="8_qj0bx"]
 [ext_resource type="Script" path="res://PEditor/PEditorDisplayClient.gd" id="9_1yxh0"]
+[ext_resource type="Script" path="res://PEditor/PEditorViewsClient.gd" id="11_k6ast"]
 
 [node name="WindowEditor" type="Control"]
 layout_direction = 2
@@ -109,16 +110,17 @@ editor_draw_limits = true
 editor_draw_drag_margin = true
 script = ExtResource("4_gx5we")
 
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/HSplitContainer/VSplitContainer"]
+[node name="ViewsPanel" type="PanelContainer" parent="PanelContainer/HSplitContainer/VSplitContainer"]
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("11_k6ast")
 
-[node name="FlowContainer" type="FlowContainer" parent="PanelContainer/HSplitContainer/VSplitContainer/PanelContainer"]
+[node name="ViewsList" type="FlowContainer" parent="PanelContainer/HSplitContainer/VSplitContainer/ViewsPanel"]
 layout_mode = 2
 
-[node name="SceneItem" parent="PanelContainer/HSplitContainer/VSplitContainer/PanelContainer/FlowContainer" instance=ExtResource("5_euu47")]
+[node name="SceneItem" parent="PanelContainer/HSplitContainer/VSplitContainer/ViewsPanel/ViewsList" instance=ExtResource("5_euu47")]
 layout_mode = 2
 
-[node name="SceneItem2" parent="PanelContainer/HSplitContainer/VSplitContainer/PanelContainer/FlowContainer" instance=ExtResource("5_euu47")]
+[node name="SceneItem2" parent="PanelContainer/HSplitContainer/VSplitContainer/ViewsPanel/ViewsList" instance=ExtResource("5_euu47")]
 layout_mode = 2

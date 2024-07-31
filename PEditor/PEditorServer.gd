@@ -13,25 +13,31 @@ static func ref() -> PEditorServer:
 		return instance
 
 #fuck it, clients don't even need a reference to the singleton to hook it up
-static func registerClient(client: PEditorClient) -> void:
-	ref()._registerClient(client)
+static func register_client(client: PEditorClient) -> void:
+	ref()._register_client(client)
+
 
 #static method to retrieve the thumbnailer
 static func getThumbnailer() -> Thumbnailer:
 	return ref().thumbnailer
 
+
 #references for the various clients we will connect
-var displayClient :	PEditorDisplayClient		= null
-var uvClient : PEditorUVClient					= null
-var viewablesClient : PEditorViewablesClient	= null
-var viewsClient : PEditorViewsClient			= null
+var client_display :	PEditorDisplayClient		= null
+var client_uv : PEditorUVClient					= null
+var client_viewables : PEditorViewablesClient	= null
+var client_views : PEditorViewsClient			= null
 
 var thumbnailer := Thumbnailer.new()
 var popup_rename : PopupRename
 
-var active_face : Node2D
+var active_face : ProjectionQuad2D = null
+
 var selected_view : View = null
-var stashed_view : View
+var active_view : View = null
+var stashed_view : View = null
+
+var selected_viewable : Viewable = null
 
 func _ready():
 	add_child(thumbnailer)
@@ -40,23 +46,28 @@ func _ready():
 	add_child(popup_rename)
 
 
-func _registerClient(client: PEditorClient) -> void:
+func _register_client(client: PEditorClient) -> void:
 	match client.type:
 		"display":
-			displayClient = client
+			client_display = client
+			print("registered display client %s" % client.name)
 			client.connect("face_selected", _on_display_face_selected)	
 
 		"uv":
-			uvClient = client
+			client_uv = client
+			print("registered uv client %s" % client.name)
 			client.connect("uv_changed", _on_uv_update)
 
 		"viewables":
-			viewablesClient = client
+			client_viewables = client
+			print("registered viewables client %s" % client.name)
 			client.connect("viewable_selected", _on_viewable_selected)
 
 		"views":
-			viewsClient = client
+			client_views = client
+			print("registered views client %s" % client.name)
 			client.connect("view_activated", _on_view_activated)
+			client.connect("view_selected", _on_view_selected)
 
 		_:
 			pass
@@ -67,6 +78,7 @@ func _on_display_face_selected(face : Node2D):
 	#load the relevant texture into the UV editor viewport
 	#set the uv vertex handle positions in the uv editor
 	active_face = face
+	client_views.refresh()
 	print("EditorServer: active face is %s" % face.name)
 
 
@@ -75,22 +87,43 @@ func _on_uv_update(uvs : PackedVector2Array):
 
 
 func _on_viewable_selected(viewable : Viewable):
-	#swap the selected viewable into the current view
-	#notify the view queue ui and the current face
-	selected_view.viewable = viewable
-	pass
+	selected_viewable = viewable
+	print("EditorServer: selected viewable %s" % viewable.name)
 
 
-func _on_view_activated(view : View):
+func _on_view_selected(view : View):
+	selected_view = view
+	print("EditorServer: selected view is %s" % view.name)
+
+
+func _on_view_activated():
 	#stash the view's current settings so we can revert changes easily
-	pass
+	stashed_view = selected_view.duplicate()
+	if client_display != null:
+		client_display.face_set_view(active_face, selected_view)
 
-func _on_view_replace_viewable(viewable : Viewable):
+func _on_view_replace_viewable():
 	#swap the viewable of the active view to the new one and commit the change
-	selected_view.viewable = viewable
+	active_view.set_viewable(selected_viewable)
 
-func _on_new_view(view : View):
+
+func _on_new_view():
 	#add the view parameters to the views db / collection of views on current face
 	#create the thumbnail for it
 	#notify the view queue ui of the change
+	if active_face != null:
+		popup_rename.invoke("new view for %s" % active_face.name, selected_viewable.name, confirm_new_view)
+
+func confirm_new_view(_name : String):
+	var view = View.new()
+	view.rename(_name)
+	view.viewable = selected_viewable
+
+	if active_face != null:
+		active_face.views[view.name] = view
+		client_views.activate_view(view)
+		client_views.refresh()
+	
+
+func cancel_new_view():
 	pass

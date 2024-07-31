@@ -1,4 +1,5 @@
 @tool
+class_name ProjectionQuad2D
 extends MeshInstance2D
 
 @export var start_size : Vector2 = Vector2(200,200)
@@ -18,6 +19,7 @@ var yverts = subdivision_resolution.y + 1
 var mesh_data = []
 var handle_positions = []
 var handles = []
+var views = {}
 
 var vertices = PackedVector3Array() 
 var uvs = PackedVector2Array() 

@@ -33,12 +33,9 @@ const grab_fine_scale = 0.5
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#hook this client into the editor server and let the server hook up the signals
-	PEditorServer.registerClient(self)
+	PEditorServer.register_client(self)
 	for f in faces:
 		f.set_editor_context(self)
-	print("PEditorDisplayClient")
-	print(faces)
-	print(display_world)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -56,7 +53,6 @@ func _process(delta):
 
 	elif deferred_vertex_handle_click:
 		var handle = deferred_vertex_handle
-		print("deferred vertex handle click on %s" % handle.name)
 
 		if Input.is_action_pressed("select_add") or selected_vertices.is_empty():
 			try_select_vertex(handle)
@@ -68,7 +64,6 @@ func _process(delta):
 
 	elif deferred_face_click:
 		var face = deferred_face
-		print("deferred face click on %s" % face.name)
 
 		if Input.is_action_pressed("select_add") or selected_faces.is_empty():
 			try_select_face(face)
@@ -116,6 +111,11 @@ func create_projection_quad() -> void:
 	display_world.add_child(pq)
 	pq.set_editor_context(self)
 	faces.append(pq)
+
+
+func face_set_view(face : ProjectionQuad2D, view : View):
+	if view.viewable.type == Viewable.Type.TEXTURE2D:
+		face.texture = view.viewable.resource
 
 
 func try_select_face(face) -> bool:
@@ -207,3 +207,6 @@ func _on_face_clicked(face : Node2D) -> void:
 
 func _on_vertex_handle_clicked(handle : Node2D) -> void:
 	defer_vertex_handle_clicked(handle)
+
+func _on_view_activated(face : ProjectionQuad2D, view : View):
+	face_set_view(face, view)

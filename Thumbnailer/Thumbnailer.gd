@@ -43,7 +43,7 @@ func capture_thumbnail_of(viewable : Viewable) -> Image:
 		_:
 			pass
 	
-	var fname = "vb_%s" % viewable.viewable_name
+	var fname = "vb_%s" % viewable.name
 	var full_path = "user://cache/thumbnails/%s.webp" % fname
 	var err = thumbnail.save_webp(full_path, true, 0.5)
 	#if saving returns an error we wanna know

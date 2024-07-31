@@ -25,7 +25,6 @@ func _input(event):
 		var mpos = get_local_mouse_position()
 		if Geometry2D.is_point_in_polygon(mpos, self.polygon):
 			clicked.emit(self)	
-			print("%s clicked" % name)
 
 
 func set_clickable(value : bool):
