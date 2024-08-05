@@ -21,7 +21,7 @@ _surfaces = [{
 visibility_layer = 3
 mesh = SubResource("ArrayMesh_rbku0")
 script = ExtResource("1_0yffn")
-subdivision_resolution = Vector2(6, 6)
+subdivision_resolution = Vector2i(10, 10)
 
 [node name="clickable_face" type="Polygon2D" parent="."]
 visible = false
@@ -43,6 +43,7 @@ color_normal = Color(0.560784, 0.560784, 0.560784, 1)
 behavior = 1
 
 [node name="SubViewport" type="SubViewport" parent="."]
+own_world_3d = true
 
 [node name="handle_0" type="Polygon2D" parent="."]
 visible = false

@@ -2,6 +2,10 @@
 class_name ProjectionQuad2D
 extends MeshInstance2D
 
+signal face_clicked
+signal vertex_handle_clicked
+signal tex_data_changed
+
 @export var start_size : Vector2i = Vector2i(200,200)
 @export var subdivision_resolution : Vector2i = Vector2(4,4)
 @export var editor_context : Node
@@ -9,18 +13,14 @@ extends MeshInstance2D
 @onready var clickable_poly2D_script = preload("res://projection_quad/clickable_poly2D.gd")
 @onready var clickable_face : Polygon2D = $clickable_face
 @onready var outline : Line2D = $outline
-@onready var viewport : SubViewport = $SubViewport
+@onready var subviewport : SubViewport = $SubViewport
+@onready var viewport_texture := subviewport.get_texture()
 
-
-signal face_clicked
-signal vertex_handle_clicked
-signal tex_data_changed
-
-static var DEFAULT_UVS = PackedVector2Array(
+static var DEFAULT_UVS := PackedVector2Array(
 	[Vector2(0,0),
-	Vector2(0,1),
 	Vector2(1,0),
-	Vector2(0,1)])
+	Vector2(0,1),
+	Vector2(1,1)])
 
 var xverts = subdivision_resolution.x + 1
 var yverts = subdivision_resolution.y + 1
@@ -28,8 +28,11 @@ var yverts = subdivision_resolution.y + 1
 var handle_uvs := PackedVector2Array() 
 var handles = []
 
-var views = {}
+var views = {
+	default_view = View.get_default_view()
+}
 var active_view : View
+var video_player = VideoStreamPlayer.new()
 
 var tex_data = {
 	resolution = start_size,
@@ -103,6 +106,10 @@ func init_outline() -> void:
 		handles[2].position
 	])
 
+func init_video_player() -> void:
+	video_player.set_volume(0)
+	video_player.set_autoplay(true)
+	video_player.set_loop(true)
 
 func init_mesh() -> void:
 	uvs.clear()
@@ -156,6 +163,8 @@ func init_mesh() -> void:
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
 	refresh_tex_data()
+	#force refresh tex data on first construction
+	tex_data_changed.emit(tex_data)
 	
 func rebuild_selector_polygon() -> void:
 	clickable_face.set_polygon([
@@ -204,7 +213,6 @@ func rebuild_uv() -> void:
 
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
-	print("rebuilt uvs: %s" %uvs)
 
 
 func refresh_tex_data():
@@ -224,12 +232,17 @@ func refresh_tex_data():
 	tex_data.resolution = Vector2i(width, height)
 	tex_data.aspect = width/height
 
+	#resize the subviewport
+
 	if res_changed || aspect_changed:
 		tex_data_changed.emit(tex_data)
 
+
 func set_uvs(_uvs : PackedVector2Array):
-	handle_uvs = _uvs
-	needs_rebuild_uvs = true
+	if handle_uvs != _uvs:
+		handle_uvs = _uvs
+		needs_rebuild_uvs = true
+
 
 func reset_uvs():
 	if handle_uvs != ProjectionQuad2D.DEFAULT_UVS:
@@ -237,8 +250,107 @@ func reset_uvs():
 		needs_rebuild_uvs = true
 	
 
+func auto_uv():
+	#get the resolution and aspect of the quad
+	#set new resolution for its subviewport
+	#get resolution data of the texture of its active view??
+	#set its uvs so as to "center / cover"
+	var viewable = active_view.viewable
+
+	match viewable.type:
+		Viewable.Type.TEXTURE2D:
+			var tex = viewable.resource
+			var t_aspect = tex.get_width() / tex.get_height()
+			var q_aspect = tex_data.aspect
+			
+			if t_aspect > q_aspect:
+				var uv_width = q_aspect / t_aspect
+				var uvs = PackedVector2Array([
+					Vector2(0.5 - uv_width/2, 0),
+					Vector2(0.5 + uv_width/2, 0),
+					Vector2(0.5 - uv_width/2, 1),
+					Vector2(0.5 + uv_width/2, 1)])
+				set_uvs(uvs)
+
+			elif q_aspect > t_aspect:
+				var uv_height : float = t_aspect / q_aspect
+				var uvs = PackedVector2Array([
+					Vector2(0, 0.5 - uv_height/2),
+					Vector2(1, 0.5 - uv_height/2),
+					Vector2(0, 0.5 + uv_height/2),
+					Vector2(1, 0.5 + uv_height/2)])
+				set_uvs(uvs)
+
+			else:
+				reset_uvs()
+
+		#if the face's texture is being rendered from a camera/subviewport
+		#the uvs should cover the full rectangle
+		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
+			reset_uvs()
+
+		Viewable.Type.VIDEOSTREAM:
+			#the videoplayer should fill the subviewport?
+			reset_uvs()
+
+		_:
+			pass
+
+
+func set_view(view : View):
+	if active_view == view: return
+
+
+
+	#case-by-case cleanup of previous view
+	if active_view:
+		match active_view.viewable.type:
+			Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
+				#clear the subviewports children
+				for c in subviewport.get_children():
+					subviewport.remove_child(c)
+					c.queue_free()
+
+			Viewable.Type.VIDEOSTREAM:
+				#remove the videoplayer but don't free it from memory
+				video_player.stop()
+				subviewport.remove_child(video_player)
+				
+			_:
+				pass
+
+	active_view = view
+
+	match view.viewable.type:
+		Viewable.Type.TEXTURE2D:
+			texture = view.viewable.resource
+
+		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
+			texture = viewport_texture
+			subviewport.add_child(view.viewable.resource.instantiate())
+
+		Viewable.Type.VIDEOSTREAM:
+			video_player.set_stream(view.viewable.resource)
+			video_player.set_size(tex_data.resolution)
+			subviewport.add_child(video_player)
+			texture = video_player.get_video_texture()
+			video_player.play()
+
+		_:
+			pass
+	
+	#then auto-uv-ify after updating the teture etc
+	if view.auto_uv:
+		auto_uv()
+	
+	
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	set_view(View.get_default_view())
+	tex_data_changed.connect(_on_tex_data_changed)
+
+	init_video_player()
+
 	init_handles()
 	init_outline()
 	for h in handles:
@@ -251,7 +363,6 @@ func _ready():
 	mesh = ArrayMesh.new()
 	mesh_data.resize(ArrayMesh.ARRAY_MAX)
 	init_mesh()
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -268,3 +379,12 @@ func _process(delta):
 func _on_face_selector_clicked(face):
 	face_clicked.emit(self)
 
+#no harm in listening to our own events yeah?
+func _on_tex_data_changed(tex_data):
+	subviewport.set_size(tex_data.resolution)
+	var vp = subviewport.find_child("video_player")
+	if vp:
+		vp.set_size(tex_data.resolution)
+
+	if active_view.auto_uv:
+		auto_uv()

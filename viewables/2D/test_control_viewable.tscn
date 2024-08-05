@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://ob8ic8spjexp"]
+
+[ext_resource type="Script" path="res://viewables/2D/test_control_viewable.gd" id="1_h7dvt"]
+[ext_resource type="VideoStream" path="res://viewables/texture/example_video.ogv" id="1_qqwvg"]
+
+[node name="TestControlViewable" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h7dvt")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+offset_right = 1920.0
+offset_bottom = 1088.0
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="CenterContainer"]
+layout_mode = 2
+stream = ExtResource("1_qqwvg")
+volume_db = -80.0
+autoplay = true
+loop = true

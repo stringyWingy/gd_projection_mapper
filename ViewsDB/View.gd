@@ -6,16 +6,30 @@ signal uv_changed
 
 static var DEFAULT_UVS = PackedVector2Array(
 	[Vector2(0,0),
-	Vector2(0,1),
 	Vector2(1,0),
-	Vector2(0,1)])
+	Vector2(0,1),
+	Vector2(1,1)])
 
 var name : String
 var viewable : Viewable
-var uvs : PackedVector2Array #nw, ne, sw, se
+var uvs : PackedVector2Array = DEFAULT_UVS #nw, ne, sw, se
 var auto_uv : bool = true
 var material : Material # might just use a common material and apply post process shaders or something
 var thumbnail : Texture2D
+
+static var DEFAULT_VIEW : View = null
+
+static func get_default_view() -> View:
+	if !DEFAULT_VIEW:
+		DEFAULT_VIEW = View.new()
+		DEFAULT_VIEW.name = "DEFAULT VIEW"
+		DEFAULT_VIEW.set_viewable(preload("res://viewables/vb_uv_grid.tres"))
+
+		print("initialized get_default_view view %s" % DEFAULT_VIEW)
+		
+	return DEFAULT_VIEW
+		
+	
 
 func rename(_name : String):
 	if _name != name:

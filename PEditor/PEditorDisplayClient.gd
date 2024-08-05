@@ -7,13 +7,9 @@ signal face_deleted
 
 @onready var display_world = $DisplayWorldViewport/DisplayWorld
 
-@onready var faces = [
-	$DisplayWorldViewport/DisplayWorld/DemoQuad1,
-	$DisplayWorldViewport/DisplayWorld/DemoQuad2,
-]
-
 var type = "display"
 
+var faces = []
 var selected_faces = []
 var selected_vertices = []
 var projection_quad_tscn = preload("res://projection_quad/projection_quad_2d.tscn")
@@ -50,8 +46,6 @@ func _process(delta):
 
 		for f in selected_faces:
 			f.needs_rebuild_mesh = true
-			if f.active_view.auto_uv:
-				auto_uv(f)
 
 	elif deferred_vertex_handle_click:
 		var handle = deferred_vertex_handle
@@ -116,10 +110,11 @@ func create_projection_quad() -> void:
 
 
 func face_set_view(face : ProjectionQuad2D, view : View):
-	if view.viewable.type == Viewable.Type.TEXTURE2D:
-		face.texture = view.viewable.resource
+	face.set_view(view)
+	#if view.viewable.type == Viewable.Type.TEXTURE2D:
+		#face.texture = view.viewable.resource
 	
-	face.active_view = view
+	#face.active_view = view
 
 
 func try_select_face(face) -> bool:
@@ -191,9 +186,7 @@ func cancel_grab() -> void:
 		i += 1
 
 	for f in selected_faces:
-		f.needs_rebuild = true
-		if f.active_view.auto_uv:
-			auto_uv(f)
+		f.needs_rebuild_mesh = true
 
 	grabbing = false
 
@@ -206,60 +199,6 @@ func defer_vertex_handle_clicked(handle: Node2D) -> void:
 	deferred_vertex_handle_click = true
 	deferred_vertex_handle = handle
 
-#TODO: finish this implementation
-#then figure out where it even belongs lol
-#probably as a trigger whenever the geometry of the projection quad changes
-#so inside projection quad??
-func auto_uv(face : ProjectionQuad2D):
-	#get the resolution and aspect of the quad
-	#set new resolution for its subviewport
-	#get resolution data of the texture of its active view??
-	#set its uvs so as to "center / cover"
-	var res = face.tex_data.resolution
-	face.viewport.set_size(res)
-
-	var viewable = face.active_view.viewable
-
-	match viewable.type:
-		Viewable.Type.TEXTURE2D:
-			var tex = viewable.resource
-			var t_aspect = tex.get_width() / tex.get_height()
-			var q_aspect = face.tex_data.aspect
-			
-			if t_aspect > q_aspect:
-				var uv_width = q_aspect / t_aspect
-				var uvs = PackedVector2Array([
-					Vector2(0.5 - uv_width/2, 0),
-					Vector2(0.5 + uv_width/2, 0),
-					Vector2(0.5 - uv_width/2, 1),
-					Vector2(0.5 + uv_width/2, 1)])
-				face.set_uvs(uvs)
-
-			elif q_aspect > t_aspect:
-				var uv_height : float = t_aspect / q_aspect
-				var uvs = PackedVector2Array([
-					Vector2(0, 0.5 - uv_height/2),
-					Vector2(1, 0.5 - uv_height/2),
-					Vector2(0, 0.5 + uv_height/2),
-					Vector2(1, 0.5 + uv_height/2)])
-				face.set_uvs(uvs)
-
-			else:
-				face.reset_uvs()
-
-		#if the face's texture is being rendered from a camera/subviewport
-		#the uvs should cover the full rectangle
-		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
-			face.reset_uvs()
-
-		Viewable.Type.VIDEOSTREAM:
-			#get the resolution/aspect ratio of the texture
-			pass
-
-		_:
-			pass
-
-	pass
 
 
 func _on_face_clicked(face : Node2D) -> void:
