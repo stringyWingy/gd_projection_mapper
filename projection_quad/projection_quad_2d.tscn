@@ -42,6 +42,8 @@ color_highlight = Color(1, 1, 0.411765, 1)
 color_normal = Color(0.560784, 0.560784, 0.560784, 1)
 behavior = 1
 
+[node name="SubViewport" type="SubViewport" parent="."]
+
 [node name="handle_0" type="Polygon2D" parent="."]
 visible = false
 visibility_layer = 2

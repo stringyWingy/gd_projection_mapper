@@ -2,30 +2,47 @@
 class_name ProjectionQuad2D
 extends MeshInstance2D
 
-@export var start_size : Vector2 = Vector2(200,200)
-@export var subdivision_resolution : Vector2 = Vector2(4,4)
+@export var start_size : Vector2i = Vector2i(200,200)
+@export var subdivision_resolution : Vector2i = Vector2(4,4)
 @export var editor_context : Node
 
 @onready var clickable_poly2D_script = preload("res://projection_quad/clickable_poly2D.gd")
 @onready var clickable_face : Polygon2D = $clickable_face
 @onready var outline : Line2D = $outline
+@onready var viewport : SubViewport = $SubViewport
+
 
 signal face_clicked
 signal vertex_handle_clicked
+signal tex_data_changed
+
+static var DEFAULT_UVS = PackedVector2Array(
+	[Vector2(0,0),
+	Vector2(0,1),
+	Vector2(1,0),
+	Vector2(0,1)])
 
 var xverts = subdivision_resolution.x + 1
 var yverts = subdivision_resolution.y + 1
 
-var mesh_data = []
-var handle_positions = []
+var handle_uvs := PackedVector2Array() 
 var handles = []
+
 var views = {}
+var active_view : View
 
-var vertices = PackedVector3Array() 
-var uvs = PackedVector2Array() 
-var indices = PackedInt32Array() 
+var tex_data = {
+	resolution = start_size,
+	aspect = start_size.x / start_size.y,
+}
 
-var needs_rebuild := false
+var mesh_data = []
+var vertices := PackedVector3Array() 
+var uvs := PackedVector2Array() 
+var indices := PackedInt32Array() 
+
+var needs_rebuild_mesh := false
+var needs_rebuild_uvs := false
 
 func set_editor_context(context : Node) -> void:
 	editor_context = context
@@ -99,7 +116,7 @@ func init_mesh() -> void:
 	for j in yverts:
 		for i in xverts:
 			#helpful to have normalized cords progressing along the mesh's limits
-			var frac = Vector2(i,j) / subdivision_resolution
+			var frac = Vector2i(i,j) / subdivision_resolution
 
 			#init uvs as full 0-1
 			var uv = Vector2(frac.x,frac.y)
@@ -138,6 +155,7 @@ func init_mesh() -> void:
 	mesh_data[ArrayMesh.ARRAY_INDEX] =  indices
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
+	refresh_tex_data()
 	
 func rebuild_selector_polygon() -> void:
 	clickable_face.set_polygon([
@@ -157,8 +175,8 @@ func rebuild_positions() -> void:
 
 	vertices.clear()
 
-	for j in yverts:
-		for i in xverts:
+	for j : float in yverts:
+		for i : float in xverts:
 			#get positions along the 'top' and 'bottom' edges (in handle space) based on the x index coordinate of this vertex
 			var p1 = handles[0].position.lerp(handles[1].position, i/subdivision_resolution.x)
 			var p2 = handles[2].position.lerp(handles[3].position, i/subdivision_resolution.x)
@@ -169,20 +187,16 @@ func rebuild_positions() -> void:
 
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
+	refresh_tex_data()
 
 func rebuild_uv() -> void:
 	uvs.clear()
-	var corners = []
-	corners[0] = uvs[0]
-	corners[1] = uvs[subdivision_resolution.x]
-	corners[2] = uvs[xverts * subdivision_resolution.y]
-	corners[3] = uvs[xverts * subdivision_resolution.y + subdivision_resolution.x]
 
-	for j in yverts:
-		for i in xverts:
-			#get positions along the 'top' and 'bottom' edges (in handle space) based on the x index coordinate of this vertex
-			var p1 = corners[0].lerp(corners[1], i/subdivision_resolution.x)
-			var p2 = corners[2].lerp(corners[3], i/subdivision_resolution.x)
+	for j : float in yverts:
+		for i : float in xverts:
+			#get positions along the 'top' and 'bottom' edges (in uv space) based on the x index coordinate of this vertex
+			var p1 = handle_uvs[0].lerp(handle_uvs[1], i/subdivision_resolution.x)
+			var p2 = handle_uvs[2].lerp(handle_uvs[3], i/subdivision_resolution.x)
 
 			#lerp between those two positions to create a y axis in handle space
 			var p = p1.lerp(p2, j/subdivision_resolution.y)
@@ -190,10 +204,41 @@ func rebuild_uv() -> void:
 
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
+	print("rebuilt uvs: %s" %uvs)
+
+
+func refresh_tex_data():
+	var mid_y1 = handles[0].position.lerp(handles[1].position, 0.5)
+	var mid_y2 = handles[2].position.lerp(handles[3].position, 0.5)
+
+	var height = mid_y1.distance_to(mid_y2)
+	
+	var mid_x1 = handles[0].position.lerp(handles[2].position, 0.5)
+	var mid_x2 = handles[1].position.lerp(handles[3].position, 0.5)
+
+	var width = mid_x1.distance_to(mid_x2)
+
+	var res_changed : bool = (width != tex_data.resolution.x || height != tex_data.resolution.y)
+	var aspect_changed : bool = width/height != tex_data.aspect
+
+	tex_data.resolution = Vector2i(width, height)
+	tex_data.aspect = width/height
+
+	if res_changed || aspect_changed:
+		tex_data_changed.emit(tex_data)
+
+func set_uvs(_uvs : PackedVector2Array):
+	handle_uvs = _uvs
+	needs_rebuild_uvs = true
+
+func reset_uvs():
+	if handle_uvs != ProjectionQuad2D.DEFAULT_UVS:
+		handle_uvs = ProjectionQuad2D.DEFAULT_UVS
+		needs_rebuild_uvs = true
+	
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-
 	init_handles()
 	init_outline()
 	for h in handles:
@@ -210,11 +255,16 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if needs_rebuild:
+	if needs_rebuild_mesh:
 		rebuild_positions()
 		rebuild_selector_polygon()
-		needs_rebuild = false
+		needs_rebuild_mesh = false
+
+	if needs_rebuild_uvs:
+		rebuild_uv()
+		needs_rebuild_uvs = false
 
 
 func _on_face_selector_clicked(face):
 	face_clicked.emit(self)
+
