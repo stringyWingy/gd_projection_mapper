@@ -41,9 +41,10 @@ _surfaces = [{
 }]
 
 [sub_resource type="StandardMaterial3D" id="4"]
-albedo_color = Color(0.753906, 0.753906, 0.753906, 1)
-metallic = 0.4
-roughness = 0.1
+diffuse_mode = 1
+albedo_color = Color(0.952826, 0.665721, 0.862419, 1)
+metallic_specular = 0.63
+roughness = 0.08
 
 [node name="Robot3D" type="Node3D"]
 script = ExtResource("1")

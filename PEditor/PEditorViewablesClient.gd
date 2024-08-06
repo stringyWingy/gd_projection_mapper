@@ -7,7 +7,7 @@ extends PEditorClient
 const type = "viewables"
 
 var view_tile_tscn = preload("res://ui/view_tile.tscn")
-var viewables = preload("res://ViewsDB/ViewsDB.tres").viewables
+var viewables = {}
 var viewables_button_group = preload("res://ui/btn_grp_viewables.tres")
 
 var selected_viewable : Viewable
@@ -57,7 +57,8 @@ func _on_scene_tile_selected(button : BaseButton):
 
 
 func _on_view_selected(view : View):
-   pass
+   selected_viewable = view.viewable
+   viewable_selected.emit(selected_viewable)
 
 
 func _gui_input(event):

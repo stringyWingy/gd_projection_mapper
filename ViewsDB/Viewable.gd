@@ -43,3 +43,10 @@ func rename(_name : String):
 		name = _name
 		emit_changed()
 	
+func get_save_data():
+	var data = {
+		"name" : name,
+		"type" : type,
+		"resource_path" : resource.resource_path
+	}
+	return data

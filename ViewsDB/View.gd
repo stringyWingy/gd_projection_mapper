@@ -10,13 +10,6 @@ static var DEFAULT_UVS = PackedVector2Array(
 	Vector2(0,1),
 	Vector2(1,1)])
 
-var name : String
-var viewable : Viewable
-var uvs : PackedVector2Array = DEFAULT_UVS #nw, ne, sw, se
-var auto_uv : bool = true
-var material : Material # might just use a common material and apply post process shaders or something
-var thumbnail : Texture2D
-
 static var DEFAULT_VIEW : View = null
 
 static func get_default_view() -> View:
@@ -28,7 +21,13 @@ static func get_default_view() -> View:
 		print("initialized get_default_view view %s" % DEFAULT_VIEW)
 		
 	return DEFAULT_VIEW
-		
+
+var name : String
+var viewable : Viewable
+var uvs : PackedVector2Array = DEFAULT_UVS #nw, ne, sw, se
+var auto_uv : bool = true
+var material : Material # might just use a common material and apply post process shaders or something
+var thumbnail : Texture2D
 	
 
 func rename(_name : String):
@@ -54,6 +53,16 @@ func set_uvs(_uvs : PackedVector2Array):
 	uvs = _uvs
 	uv_changed.emit(uvs)
 
+
 func reset_uv():
 	if uvs != DEFAULT_UVS:
 		uvs = DEFAULT_UVS
+
+func get_save_data():
+	var data = {
+		"name" : name,
+		"viewable" : viewable.name,
+		"uvs" : var_to_bytes(uvs),
+		"auto_uv" : auto_uv
+	}
+	return data

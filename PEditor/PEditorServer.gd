@@ -38,12 +38,24 @@ var active_view : View = null
 var stashed_view : View = null
 
 var selected_viewable : Viewable = null
+var viewsDB = ViewsDB.new()
+
+var dialog_save_scene = FileDialog.new()
+const last_edited_path_file = "user://cache/last-edited"
 
 func _ready():
 	add_child(thumbnailer)
+
 	get_viewport().set_embedding_subwindows(true)
 	popup_rename = preload("res://ui/popup_new_name.tscn").instantiate()
 	add_child(popup_rename)
+
+	add_child(dialog_save_scene)
+	dialog_save_scene.hide()
+	dialog_save_scene.add_filter("*.dingus", "projection mapper display")
+	dialog_save_scene.set_access(FileDialog.ACCESS_USERDATA)
+
+
 
 
 func _register_client(client: PEditorClient) -> void:
@@ -63,6 +75,10 @@ func _register_client(client: PEditorClient) -> void:
 			print("registered viewables client %s" % client.name)
 			client.connect("viewable_selected", _on_viewable_selected)
 
+			viewsDB.connect("viewables_list_changed", client.refresh)
+			client.viewables = viewsDB.viewables
+			client.refresh()
+
 		"views":
 			client_views = client
 			print("registered views client %s" % client.name)
@@ -72,6 +88,11 @@ func _register_client(client: PEditorClient) -> void:
 		_:
 			pass
 
+
+func _input(event):
+	if event.is_action_pressed("file_save"):
+		save_scene()
+		
 
 func _on_display_face_selected(face : Node2D):
 	#highlight the face's current view in the view queue
@@ -127,3 +148,67 @@ func confirm_new_view(_name : String):
 
 func cancel_new_view():
 	pass
+
+
+func save_scene():
+	dialog_save_scene.popup()
+	dialog_save_scene.file_selected.connect(_on_confirm_save_scene)
+	dialog_save_scene.move_to_center()
+	
+
+func _on_confirm_save_scene(path : String):
+	if client_display:
+		var faces = client_display.faces.map(func(face): return face.get_save_data())
+		var json_string = JSON.stringify(faces)
+		#remove the target file if it exists, otherwise we just append data to it
+		if FileAccess.file_exists(path):
+			var remove_err = DirAccess.remove_absolute(path)
+			if remove_err != OK:
+				print("error removing file %s for overwrite %s" % [path, error_string(remove_err)])
+				return
+
+		var file = FileAccess.open(path, FileAccess.WRITE)
+		file.store_string(json_string)
+		file.close()
+
+	update_most_recent_save(path)
+
+
+func load_scene_file(path : String):
+	var file = FileAccess.open(path, FileAccess.READ)
+	var file_text = file.get_as_text()
+	var json = JSON.new()
+	var faces_data = json.parse(file_text)
+	if faces_data != OK:
+		print(error_string(file_text))
+		print("failed to parse %s as JSON" % path)
+		return
+	scene_from_json_data(faces_data)
+
+
+func scene_from_json_data(data):
+	#TODO: implement this
+	#implement from_save_data methods on faces and viewables
+	pass
+
+
+func update_most_recent_save(path : String):
+	if FileAccess.file_exists(last_edited_path_file):
+		var remove_err = DirAccess.remove_absolute(last_edited_path_file)
+		if remove_err != OK:
+			print("error removing file %s for overwrite %s" % [last_edited_path_file, error_string(remove_err)])
+			return
+
+	var file = FileAccess.open(last_edited_path_file, FileAccess.WRITE)
+	file.store_string(path)
+	file.close()
+
+
+func get_most_recent_save():
+	var file = FileAccess.open(last_edited_path_file, FileAccess.READ)
+	var path = file.get_as_text()
+	file.close()
+	return path
+	
+	
+

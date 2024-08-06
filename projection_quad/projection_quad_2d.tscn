@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://projection_quad/projection_quad_2d.gd" id="1_0yffn"]
 [ext_resource type="Script" path="res://projection_quad/clickable_poly2D.gd" id="3_op5qt"]
-[ext_resource type="Script" path="res://outliner_2d.gd" id="3_re6rk"]
+[ext_resource type="Script" path="res://projection_quad/outliner_2d.gd" id="3_re6rk"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_rbku0"]
 _surfaces = [{

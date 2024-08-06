@@ -388,3 +388,23 @@ func _on_tex_data_changed(tex_data):
 
 	if active_view.auto_uv:
 		auto_uv()
+
+
+func get_save_data():
+	var handle_positions = PackedVector2Array()
+	for h in handles:
+		handle_positions.append(h.position)
+	
+	var save_views = [] 
+	for v in views:
+		var view = views[v]
+		save_views.append(view.get_save_data())
+		
+		
+	var data = {
+		"name" : name,
+		"position" : var_to_bytes(position),
+		"handle_positions" : var_to_bytes(handle_positions),
+		"views" : save_views
+	}
+	return data
