@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Viewable" load_steps=3 format=3 uid="uid://c3fe6vr5t3545"]
+
+[ext_resource type="PackedScene" uid="uid://ob8ic8spjexp" path="res://viewables/2D/test_control_viewable.tscn" id="1_5op7g"]
+[ext_resource type="Script" path="res://ViewsDB/Viewable.gd" id="1_ghntd"]
+
+[resource]
+script = ExtResource("1_ghntd")
+name = "Test Control"
+type = 0
+resource = ExtResource("1_5op7g")

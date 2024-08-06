@@ -118,9 +118,3 @@ script = ExtResource("11_k6ast")
 
 [node name="ViewsList" type="FlowContainer" parent="PanelContainer/HSplitContainer/VSplitContainer/ViewsPanel"]
 layout_mode = 2
-
-[node name="SceneItem" parent="PanelContainer/HSplitContainer/VSplitContainer/ViewsPanel/ViewsList" instance=ExtResource("5_euu47")]
-layout_mode = 2
-
-[node name="SceneItem2" parent="PanelContainer/HSplitContainer/VSplitContainer/ViewsPanel/ViewsList" instance=ExtResource("5_euu47")]
-layout_mode = 2

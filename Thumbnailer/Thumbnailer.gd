@@ -15,14 +15,13 @@ func capture_thumbnail_of(viewable : Viewable) -> Image:
 	render_target_update_mode = SubViewport.UPDATE_ONCE
 
 	match viewable.type:
-		Viewable.Type.SCENE_2D:
-			pass
-		Viewable.Type.SCENE_3D:
+		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
 			newChild = viewable.resource.instantiate()
 			add_child(newChild)
 			await RenderingServer.frame_post_draw
 			thumbnail = get_texture().get_image()
 			remove_child(newChild)
+			newChild.queue_free()
 		Viewable.Type.TEXTURE2D:
 			#we'll just be using the texture itself as the thumbnail
 			pass
