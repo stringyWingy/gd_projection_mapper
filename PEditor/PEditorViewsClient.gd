@@ -28,7 +28,7 @@ func refresh():
   views = selected_face.views
 
   for v in views:
-    add_ui_tile_from_view(views[v])
+    add_ui_tile_from_view(PEditorServer.getViewsDB().get_view(v))
 	
 
 func add_ui_tile_from_view(view : View):

@@ -28,7 +28,7 @@ var uvs : PackedVector2Array = DEFAULT_UVS #nw, ne, sw, se
 var auto_uv : bool = true
 var material : Material # might just use a common material and apply post process shaders or something
 var thumbnail : Texture2D
-	
+var id : int
 
 func rename(_name : String):
 	if _name != name:
@@ -60,9 +60,19 @@ func reset_uv():
 
 func get_save_data():
 	var data = {
+		"id" : id,
 		"name" : name,
-		"viewable" : viewable.name,
-		"uvs" : var_to_bytes(uvs),
+		"viewable" : viewable.id,
+		"uvs" : Array(var_to_bytes(uvs)),
 		"auto_uv" : auto_uv
 	}
 	return data
+
+static func from_save_data(data) -> View:
+	var view = View.new()
+	view.id = data.id
+	view.rename(data.name)
+	view.set_viewable(PEditorServer.getViewsDB().get_viewable(data.viewable))
+	view.set_uvs(bytes_to_var(PackedByteArray(data.uvs)))
+	view.auto_uv = data.auto_uv
+	return view

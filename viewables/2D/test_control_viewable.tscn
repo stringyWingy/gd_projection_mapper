@@ -32,5 +32,4 @@ vertical_alignment = 1
 
 [node name="Suffix" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "ass"
 horizontal_alignment = 1

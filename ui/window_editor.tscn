@@ -99,7 +99,7 @@ script = ExtResource("9_1yxh0")
 [node name="DisplayWorldViewport" type="SubViewport" parent="PanelContainer/HSplitContainer/VSplitContainer/DisplayWorldContainer"]
 handle_input_locally = false
 canvas_cull_mask = 4294966275
-size = Vector2i(976, 592)
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
 [node name="DisplayWorld" parent="PanelContainer/HSplitContainer/VSplitContainer/DisplayWorldContainer/DisplayWorldViewport" instance=ExtResource("1_niy3p")]

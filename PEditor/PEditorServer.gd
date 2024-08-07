@@ -17,9 +17,11 @@ static func register_client(client: PEditorClient) -> void:
 	ref()._register_client(client)
 
 
-#static method to retrieve the thumbnailer
 static func getThumbnailer() -> Thumbnailer:
 	return ref().thumbnailer
+
+static func getViewsDB() -> ViewsDB:
+	return ref().viewsDB
 
 
 #references for the various clients we will connect
@@ -40,8 +42,9 @@ var stashed_view : View = null
 var selected_viewable : Viewable = null
 var viewsDB = ViewsDB.new()
 
-var dialog_save_scene = FileDialog.new()
+var file_selector = FileDialog.new()
 const last_edited_path_file = "user://cache/last-edited"
+var most_recent_save_path : String = ""
 
 func _ready():
 	add_child(thumbnailer)
@@ -50,10 +53,12 @@ func _ready():
 	popup_rename = preload("res://ui/popup_new_name.tscn").instantiate()
 	add_child(popup_rename)
 
-	add_child(dialog_save_scene)
-	dialog_save_scene.hide()
-	dialog_save_scene.add_filter("*.dingus", "projection mapper display")
-	dialog_save_scene.set_access(FileDialog.ACCESS_USERDATA)
+	add_child(file_selector)
+	file_selector.hide()
+	file_selector.add_filter("*.dingus", "projection mapper display")
+	file_selector.set_access(FileDialog.ACCESS_USERDATA)
+
+	most_recent_save_path = get_most_recent_save_path()
 
 
 
@@ -75,9 +80,9 @@ func _register_client(client: PEditorClient) -> void:
 			print("registered viewables client %s" % client.name)
 			client.connect("viewable_selected", _on_viewable_selected)
 
-			viewsDB.connect("viewables_list_changed", client.refresh)
 			client.viewables = viewsDB.viewables
 			client.refresh()
+			viewsDB.connect("viewables_list_changed", client.refresh)
 
 		"views":
 			client_views = client
@@ -91,7 +96,9 @@ func _register_client(client: PEditorClient) -> void:
 
 func _input(event):
 	if event.is_action_pressed("file_save"):
-		save_scene()
+		begin_save_scene()
+	elif event.is_action_pressed("file_open"):
+		begin_load_scene()
 		
 
 func _on_display_face_selected(face : Node2D):
@@ -136,12 +143,12 @@ func _on_new_view():
 		popup_rename.invoke("new view for %s" % active_face.name, selected_viewable.name, confirm_new_view)
 
 func confirm_new_view(_name : String):
-	var view = View.new()
+	var view = viewsDB.create_view()
 	view.rename(_name)
-	view.viewable = selected_viewable
+	view.set_viewable(selected_viewable)
 
 	if active_face != null:
-		active_face.views[view.name] = view
+		active_face.views.append(view.id)
 		client_views.activate_view(view)
 		client_views.refresh()
 	
@@ -150,16 +157,30 @@ func cancel_new_view():
 	pass
 
 
-func save_scene():
-	dialog_save_scene.popup()
-	dialog_save_scene.file_selected.connect(_on_confirm_save_scene)
-	dialog_save_scene.move_to_center()
+func begin_save_scene():
+	file_selector.set_current_path(most_recent_save_path)
+	file_selector.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	file_selector.popup()
+	file_selector.file_selected.connect(_on_confirm_save_scene)
+	file_selector.move_to_center()
+	file_selector.grab_focus()
 	
+func begin_load_scene():
+	file_selector.set_current_path(most_recent_save_path)
+	file_selector.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	file_selector.popup()
+	file_selector.file_selected.connect(_on_confirm_load_scene)
+	file_selector.move_to_center()
+	file_selector.grab_focus()
 
 func _on_confirm_save_scene(path : String):
 	if client_display:
-		var faces = client_display.faces.map(func(face): return face.get_save_data())
-		var json_string = JSON.stringify(faces)
+		var data = viewsDB.get_save_data()
+		var faces_data = client_display.faces.map(func(face): return face.get_save_data())
+		data["faces"] = faces_data
+	
+		var json_string = JSON.stringify(data)
+
 		#remove the target file if it exists, otherwise we just append data to it
 		if FileAccess.file_exists(path):
 			var remove_err = DirAccess.remove_absolute(path)
@@ -171,28 +192,44 @@ func _on_confirm_save_scene(path : String):
 		file.store_string(json_string)
 		file.close()
 
-	update_most_recent_save(path)
+	file_selector.file_selected.disconnect(_on_confirm_save_scene)
+	update_most_recent_save_path(path)
+	most_recent_save_path = path
 
 
-func load_scene_file(path : String):
+func _on_confirm_load_scene(path : String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	var file_text = file.get_as_text()
 	var json = JSON.new()
-	var faces_data = json.parse(file_text)
-	if faces_data != OK:
-		print(error_string(file_text))
+	var error = json.parse(file_text)
+	if error != OK:
+		print(json.get_error_message())
 		print("failed to parse %s as JSON" % path)
+		file.close()
 		return
-	scene_from_json_data(faces_data)
+	scene_from_json_data(json.data)
+	file.close()
+
+	file_selector.file_selected.disconnect(_on_confirm_load_scene)
+	update_most_recent_save_path(path)
+	most_recent_save_path = path
 
 
 func scene_from_json_data(data):
-	#TODO: implement this
-	#implement from_save_data methods on faces and viewables
-	pass
+	#create views from save data
+	viewsDB.load_save_data(data)
+
+	if client_display:
+		client_display.clear()
+
+	#create projection faces from save data
+	for f in data.faces:
+		var quad = ProjectionQuad2D.from_save_data(f)
+		if client_display:
+			client_display.add_face(quad)
 
 
-func update_most_recent_save(path : String):
+func update_most_recent_save_path(path : String):
 	if FileAccess.file_exists(last_edited_path_file):
 		var remove_err = DirAccess.remove_absolute(last_edited_path_file)
 		if remove_err != OK:
@@ -204,7 +241,7 @@ func update_most_recent_save(path : String):
 	file.close()
 
 
-func get_most_recent_save():
+func get_most_recent_save_path() -> String:
 	var file = FileAccess.open(last_edited_path_file, FileAccess.READ)
 	var path = file.get_as_text()
 	file.close()

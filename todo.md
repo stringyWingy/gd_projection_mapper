@@ -1,6 +1,6 @@
 #TODO
 
-instead of manually creating a viewsDB resource, designate a folder to traverse for .tres files and populate the viewDB that way at runtime/compiletime
+names for projection quads, labels that float over them in the editor
 
 ===
 

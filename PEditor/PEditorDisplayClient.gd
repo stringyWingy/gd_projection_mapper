@@ -108,6 +108,15 @@ func create_projection_quad() -> void:
 	pq.set_editor_context(self)
 	faces.append(pq)
 
+func add_face(face: ProjectionQuad2D):
+	faces.append(face)
+	face.set_editor_context(self)
+	display_world.add_child(face)
+
+func clear():
+	faces.clear()
+	for c in display_world.get_children():
+		display_world.remove_child(c)
 
 func face_set_view(face : ProjectionQuad2D, view : View):
 	face.set_view(view)

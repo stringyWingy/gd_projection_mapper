@@ -13,8 +13,15 @@ enum Type {
 @export var type : Type = Type.TEXTURE2D
 @export var resource : Resource = null
 var thumbnail : Texture2D = null
+var id : int
+var views_of : int = 0
 
 signal thumbnail_changed
+
+func get_id():
+	id = resource.resource_path.hash()
+	return id
+
 
 func setThumbnail():
 	match type:
@@ -45,6 +52,7 @@ func rename(_name : String):
 	
 func get_save_data():
 	var data = {
+		"id" : id,
 		"name" : name,
 		"type" : type,
 		"resource_path" : resource.resource_path

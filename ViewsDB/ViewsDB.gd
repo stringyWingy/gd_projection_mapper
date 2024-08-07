@@ -1,10 +1,16 @@
 class_name ViewsDB
 extends Resource
 
-@export var viewables = {}
-@export var views = {}
+var viewables = {}
+
+var views = {
+	0 : View.get_default_view()	
+}
+
+var views_id_index : int = 0
 
 signal viewables_list_changed
+signal views_list_changed
 
 func _init():
 	#open the res://viewables folder and collect all the .tres files there into the viewables dict
@@ -13,5 +19,47 @@ func _init():
 		var fnames = dir.get_files()
 		for f in fnames:
 			var vb = load("res://viewables/%s" % f)
-			viewables[vb.name] = vb
+			viewables[vb.get_id()] = vb
 	viewables_list_changed.emit()
+
+
+func create_view() -> View:
+	var id = create_view_id()
+	var view = View.new()
+	view.id = id
+	views[id] = view
+	return view
+
+
+func create_view_id() -> int:
+	var id : int = String("%d" % views_id_index).hash()
+	views_id_index +=1 
+	return id
+
+
+func get_view(vid : int) -> View:
+	return views[vid]
+
+func get_viewable(vid : int) -> Viewable:
+	return viewables[vid]
+
+
+func get_save_data():
+	var views_data = []
+	for v in views:
+		views_data.append(views[v].get_save_data())
+
+	var data = {
+		"views_id_index" : views_id_index,
+		"views" : views_data
+	} 
+
+	return data
+
+func load_save_data(data):
+	views_id_index = int(data.views_id_index)
+	for view_data in data.views:
+		var view = View.from_save_data(view_data)
+		views[view.id] = view
+
+

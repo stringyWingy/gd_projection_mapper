@@ -28,9 +28,8 @@ var yverts = subdivision_resolution.y + 1
 var handle_uvs := PackedVector2Array() 
 var handles = []
 
-var views = {
-	default_view = View.get_default_view()
-}
+var views = [0] #0 will be default view, eh?
+
 var active_view : View
 var video_player = VideoStreamPlayer.new()
 
@@ -343,6 +342,10 @@ func set_view(view : View):
 	if view.auto_uv:
 		auto_uv()
 	
+
+func set_handle_positions(positions : PackedVector2Array):
+	for i in 4:
+		handles[i].position = positions
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -379,6 +382,7 @@ func _process(delta):
 func _on_face_selector_clicked(face):
 	face_clicked.emit(self)
 
+
 #no harm in listening to our own events yeah?
 func _on_tex_data_changed(tex_data):
 	subviewport.set_size(tex_data.resolution)
@@ -394,17 +398,30 @@ func get_save_data():
 	var handle_positions = PackedVector2Array()
 	for h in handles:
 		handle_positions.append(h.position)
-	
-	var save_views = [] 
-	for v in views:
-		var view = views[v]
-		save_views.append(view.get_save_data())
 		
-		
+
 	var data = {
 		"name" : name,
-		"position" : var_to_bytes(position),
-		"handle_positions" : var_to_bytes(handle_positions),
-		"views" : save_views
+		"position" : Array(var_to_bytes(position)),
+		"handle_positions" : Array(var_to_bytes(handle_positions)),
+		"views" : views,
+		"active_view" : active_view.id,
 	}
 	return data
+
+static func from_save_data(data) -> ProjectionQuad2D:
+	var quad = preload("res://projection_quad/projection_quad_2d.tscn").instantiate()
+	quad.name = data.name
+	quad.position = bytes_to_var(PackedByteArray(data.position))
+	quad.views = data.views
+	quad.set_view.call_deferred(PEditorServer.getViewsDB().get_view(data.active_view))
+
+	#need to defer this call so the quad can initialize its handles first
+	var handle_positions = bytes_to_var(PackedByteArray(data.handle_positions))
+	var set_quad_handles = func(positions):
+		for i in 4:
+			quad.handles[i].position = positions[i]
+	set_quad_handles.call_deferred(handle_positions)
+
+	quad.needs_rebuild_mesh = true
+	return quad
