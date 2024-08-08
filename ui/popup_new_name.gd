@@ -20,13 +20,14 @@ func _process(delta):
 	pass
 
 func invoke(label_text : String, default_text : String, confirm_callable : Callable):
+	input.text = ""
 	input.grab_focus()
 	label.text = label_text
 	input.placeholder_text = default_text
 	get_viewport().set_embedding_subwindows(true)
 	popup()
 	move_to_center()
-	connect("confirm", confirm_callable)
+	connect("confirm", confirm_callable, CONNECT_ONE_SHOT)
 
 func _on_confirm():
 	if input.text != "":

@@ -8,13 +8,14 @@ signal tex_data_changed
 
 @export var start_size : Vector2i = Vector2i(200,200)
 @export var subdivision_resolution : Vector2i = Vector2(4,4)
-@export var editor_context : Node
+@export var editor_context : PEditorClient
 
 @onready var clickable_poly2D_script = preload("res://projection_quad/clickable_poly2D.gd")
 @onready var clickable_face : Polygon2D = $clickable_face
 @onready var outline : Line2D = $outline
 @onready var subviewport : SubViewport = $SubViewport
 @onready var viewport_texture := subviewport.get_texture()
+@onready var label := $Label
 
 static var DEFAULT_UVS := PackedVector2Array(
 	[Vector2(0,0),
@@ -35,7 +36,7 @@ var video_player = VideoStreamPlayer.new()
 
 var tex_data = {
 	resolution = start_size,
-	aspect = start_size.x / start_size.y,
+	aspect = float(start_size.x) / start_size.y,
 }
 
 var mesh_data = []
@@ -197,6 +198,19 @@ func rebuild_positions() -> void:
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
 	refresh_tex_data()
 
+
+func rename(_name : String):
+	name = _name
+	label.text = _name
+
+
+func refresh_label_position():
+	#set the label in the midpoint of all the vertices
+	var intersection = Geometry2D.segment_intersects_segment(handles[0].position, handles[3].position, handles[1].position, handles[2].position)
+	if intersection: label.position = intersection
+
+
+
 func rebuild_uv() -> void:
 	uvs.clear()
 
@@ -264,21 +278,21 @@ func auto_uv():
 			
 			if t_aspect > q_aspect:
 				var uv_width = q_aspect / t_aspect
-				var uvs = PackedVector2Array([
+				var _uvs = PackedVector2Array([
 					Vector2(0.5 - uv_width/2, 0),
 					Vector2(0.5 + uv_width/2, 0),
 					Vector2(0.5 - uv_width/2, 1),
 					Vector2(0.5 + uv_width/2, 1)])
-				set_uvs(uvs)
+				set_uvs(_uvs)
 
 			elif q_aspect > t_aspect:
 				var uv_height : float = t_aspect / q_aspect
-				var uvs = PackedVector2Array([
+				var _uvs = PackedVector2Array([
 					Vector2(0, 0.5 - uv_height/2),
 					Vector2(1, 0.5 - uv_height/2),
 					Vector2(0, 0.5 + uv_height/2),
 					Vector2(1, 0.5 + uv_height/2)])
-				set_uvs(uvs)
+				set_uvs(_uvs)
 
 			else:
 				reset_uvs()
@@ -298,8 +312,6 @@ func auto_uv():
 
 func set_view(view : View):
 	if active_view == view: return
-
-
 
 	#case-by-case cleanup of previous view
 	if active_view:
@@ -341,14 +353,12 @@ func set_view(view : View):
 	#then auto-uv-ify after updating the teture etc
 	if view.auto_uv:
 		auto_uv()
-	
 
-func set_handle_positions(positions : PackedVector2Array):
-	for i in 4:
-		handles[i].position = positions
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	label.text = name
+
 	set_view(View.get_default_view())
 	tex_data_changed.connect(_on_tex_data_changed)
 
@@ -372,6 +382,7 @@ func _process(delta):
 	if needs_rebuild_mesh:
 		rebuild_positions()
 		rebuild_selector_polygon()
+		refresh_label_position()
 		needs_rebuild_mesh = false
 
 	if needs_rebuild_uvs:
@@ -411,7 +422,7 @@ func get_save_data():
 
 static func from_save_data(data) -> ProjectionQuad2D:
 	var quad = preload("res://projection_quad/projection_quad_2d.tscn").instantiate()
-	quad.name = data.name
+	quad.rename.call_deferred(data.name)
 	quad.position = bytes_to_var(PackedByteArray(data.position))
 	quad.views = data.views
 	quad.set_view.call_deferred(PEditorServer.getViewsDB().get_view(data.active_view))

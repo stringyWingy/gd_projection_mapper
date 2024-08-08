@@ -18,14 +18,17 @@ keycode = 4194309
 events = [SubResource("InputEventKey_evr4g")]
 
 [node name="PopupNewName" type="Popup"]
-size = Vector2i(180, 152)
+size = Vector2i(180, 120)
 visible = true
 always_on_top = true
 script = ExtResource("1_6gdru")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-offset_right = 180.0
-offset_bottom = 67.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("1_n7pn2")
 theme_type_variation = &"PanelContainerTop"
 

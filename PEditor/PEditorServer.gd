@@ -161,7 +161,7 @@ func begin_save_scene():
 	file_selector.set_current_path(most_recent_save_path)
 	file_selector.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	file_selector.popup()
-	file_selector.file_selected.connect(_on_confirm_save_scene)
+	file_selector.file_selected.connect(_on_confirm_save_scene, CONNECT_ONE_SHOT)
 	file_selector.move_to_center()
 	file_selector.grab_focus()
 	
@@ -169,7 +169,7 @@ func begin_load_scene():
 	file_selector.set_current_path(most_recent_save_path)
 	file_selector.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	file_selector.popup()
-	file_selector.file_selected.connect(_on_confirm_load_scene)
+	file_selector.file_selected.connect(_on_confirm_load_scene, CONNECT_ONE_SHOT)
 	file_selector.move_to_center()
 	file_selector.grab_focus()
 
@@ -192,7 +192,6 @@ func _on_confirm_save_scene(path : String):
 		file.store_string(json_string)
 		file.close()
 
-	file_selector.file_selected.disconnect(_on_confirm_save_scene)
 	update_most_recent_save_path(path)
 	most_recent_save_path = path
 
@@ -210,7 +209,6 @@ func _on_confirm_load_scene(path : String):
 	scene_from_json_data(json.data)
 	file.close()
 
-	file_selector.file_selected.disconnect(_on_confirm_load_scene)
 	update_most_recent_save_path(path)
 	most_recent_save_path = path
 

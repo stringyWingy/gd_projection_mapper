@@ -101,9 +101,13 @@ func _gui_input(event):
 			for f in selected_faces:
 				faces.erase(f)
 				display_world.remove_child(f)
+		elif event.is_action_pressed("ui_rename"):
+			var f = selected_faces[0]
+			PEditorServer.ref().popup_rename.invoke("rename %s" % f.name, f.name, f.rename)	
 
 func create_projection_quad() -> void:
 	var pq = projection_quad_tscn.instantiate()
+	pq.rename("Quad_%s" % faces.size())
 	display_world.add_child(pq)
 	pq.set_editor_context(self)
 	faces.append(pq)
@@ -131,6 +135,7 @@ func try_select_face(face) -> bool:
 		selected_faces.append(face)
 		face.clickable_face.highlight()
 		face.outline.highlight()
+		face.label.set_visible(true)
 		face_selected.emit(face)
 		for v in face.handles:
 			try_select_vertex(v)
@@ -152,6 +157,7 @@ func try_select_vertex(vertex) -> bool:
 func deselect_face(face) -> void:
 	selected_faces.erase(face)
 	face.clickable_face.unhighlight()
+	face.label.set_visible(false)
 	face.outline.unhighlight()
 	for h in face.handles:
 		deselect_vertex(h)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://g3qon6c7xytj"]
+[gd_scene load_steps=7 format=3 uid="uid://g3qon6c7xytj"]
 
 [ext_resource type="Script" path="res://projection_quad/projection_quad_2d.gd" id="1_0yffn"]
+[ext_resource type="Texture2D" uid="uid://wd4e6vyklh4o" path="res://viewables/texture/uv_grid.webp" id="1_he6u2"]
 [ext_resource type="Script" path="res://projection_quad/clickable_poly2D.gd" id="3_op5qt"]
 [ext_resource type="Script" path="res://projection_quad/outliner_2d.gd" id="3_re6rk"]
 
@@ -17,11 +18,36 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 200, 194, 0, 0, 200, 194, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 194, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 200, 194, 85, 85, 133, 194, 0, 0, 0, 0, 85, 85, 133, 194, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 5, 194, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 88, 85, 5, 66, 85, 85, 133, 194, 0, 0, 0, 0, 84, 85, 133, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 66, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 5, 194, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 5, 194, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 0, 0, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 194, 88, 85, 5, 66, 0, 0, 0, 0, 85, 85, 133, 194, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 5, 194, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 0, 0, 88, 85, 5, 66, 88, 85, 5, 66, 0, 0, 0, 0, 84, 85, 133, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 66, 88, 85, 5, 66, 0, 0, 0, 0, 0, 0, 200, 194, 84, 85, 133, 66, 0, 0, 0, 0, 85, 85, 133, 194, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 5, 194, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 0, 0, 88, 85, 5, 66, 84, 85, 133, 66, 0, 0, 0, 0, 84, 85, 133, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 66, 84, 85, 133, 66, 0, 0, 0, 0, 0, 0, 200, 194, 0, 0, 200, 66, 0, 0, 0, 0, 85, 85, 133, 194, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 5, 194, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 0, 0, 88, 85, 5, 66, 0, 0, 200, 66, 0, 0, 0, 0, 84, 85, 133, 66, 0, 0, 200, 66, 0, 0, 0, 0, 0, 0, 200, 66, 0, 0, 200, 66, 0, 0, 0, 0)
 }]
 
+[sub_resource type="LabelSettings" id="LabelSettings_5mgv5"]
+font_size = 12
+font_color = Color(1, 1, 0.411765, 1)
+shadow_color = Color(0.114897, 0.114897, 0.114897, 0.666667)
+
 [node name="projection_quad_2d" type="MeshInstance2D"]
 visibility_layer = 3
 mesh = SubResource("ArrayMesh_rbku0")
+texture = ExtResource("1_he6u2")
 script = ExtResource("1_0yffn")
 subdivision_resolution = Vector2i(10, 10)
+
+[node name="Label" type="Label" parent="."]
+visible = false
+visibility_layer = 2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -8.5
+offset_right = 15.0
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "quad"
+label_settings = SubResource("LabelSettings_5mgv5")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="clickable_face" type="Polygon2D" parent="."]
 visible = false
