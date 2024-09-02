@@ -327,6 +327,10 @@ func set_view(view : View):
 				video_player.stop()
 				subviewport.remove_child(video_player)
 				
+			Viewable.Type.VNC_TEXTURE:
+				#stop getting updates from the server i guess
+				active_view.viewable.resource.end()
+
 			_:
 				pass
 
@@ -346,6 +350,26 @@ func set_view(view : View):
 			subviewport.add_child(video_player)
 			texture = video_player.get_video_texture()
 			video_player.play()
+
+		Viewable.Type.VNC_TEXTURE:
+			#it will take a sec for the texture to be usable (and have non-zero dimensions)
+			texture = PlaceholderTexture2D.new()
+			texture.set_size(Vector2(64,64))
+
+			var vnc = view.viewable.resource
+
+			var ready_callback = func():
+				texture = vnc
+				print("vnc ready, swapping out placeholder texture")
+				if view.auto_uv:
+					auto_uv()
+
+
+			#try to connect to the server
+			vnc.begin(vnc.host, vnc.password)
+
+			#vnc_texture will emit this signal when it's initialized
+			vnc.connect("texture_ready", ready_callback, CONNECT_ONE_SHOT)
 
 		_:
 			pass
@@ -384,6 +408,9 @@ func _process(delta):
 		rebuild_selector_polygon()
 		refresh_label_position()
 		needs_rebuild_mesh = false
+
+	if active_view.viewable.type == Viewable.Type.VNC_TEXTURE:
+		active_view.viewable.resource.refresh(delta)
 
 	if needs_rebuild_uvs:
 		rebuild_uv()

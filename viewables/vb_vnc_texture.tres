@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Viewable" load_steps=3 format=3 uid="uid://cv4apwio7qnua"]
+
+[ext_resource type="Script" path="res://ViewsDB/Viewable.gd" id="1_akl5v"]
+[ext_resource type="Texture2D" uid="uid://brqe3v876vgr" path="res://viewables/texture/vnc_texture.tres" id="1_cmsl8"]
+
+[resource]
+script = ExtResource("1_akl5v")
+name = "VNC View"
+type = 4
+resource = ExtResource("1_cmsl8")

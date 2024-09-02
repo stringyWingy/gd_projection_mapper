@@ -1,0 +1,6 @@
+[gd_resource type="VNC_Texture" format=3 uid="uid://brqe3v876vgr"]
+
+[resource]
+host = "localhost"
+password = "password"
+target_fps = 30.0

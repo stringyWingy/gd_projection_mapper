@@ -5,7 +5,8 @@ enum Type {
 	SCENE_2D,
 	SCENE_3D,
 	TEXTURE2D,
-	VIDEOSTREAM
+	VIDEOSTREAM,
+	VNC_TEXTURE,
 	} 
 
 #var name : String

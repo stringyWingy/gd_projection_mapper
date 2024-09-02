@@ -38,7 +38,11 @@ func capture_thumbnail_of(viewable : Viewable) -> Image:
 			remove_child(newChild)
 			newChild.stop()
 			newChild.queue_free()
-			pass
+		Viewable.Type.VNC_TEXTURE:
+			var placeholder_data : PackedByteArray
+			placeholder_data.resize(64 * 64 * 4)
+			placeholder_data.fill(Color("#DD22DDFF").to_rgba32())
+			thumbnail = Image.create_from_data(64, 64, false, Image.FORMAT_RGBA8, placeholder_data)
 		_:
 			pass
 	
