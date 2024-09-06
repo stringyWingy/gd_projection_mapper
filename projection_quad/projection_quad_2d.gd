@@ -199,9 +199,13 @@ func rebuild_positions() -> void:
 	refresh_tex_data()
 
 
-func rename(_name : String):
+func rename(_name : String) -> void:
+	call_deferred("rename_internal", _name)
+
+func rename_internal(_name: String) -> void:
 	name = _name
 	label.text = _name
+
 
 
 func refresh_label_position():
@@ -449,7 +453,7 @@ func get_save_data():
 
 static func from_save_data(data) -> ProjectionQuad2D:
 	var quad = preload("res://projection_quad/projection_quad_2d.tscn").instantiate()
-	quad.rename.call_deferred(data.name)
+	quad.rename(data.name)
 	quad.position = bytes_to_var(PackedByteArray(data.position))
 	quad.views = data.views
 	quad.set_view.call_deferred(PEditorServer.getViewsDB().get_view(data.active_view))
