@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dc8prfnxh8rfl"]
 
-[ext_resource type="Script" path="res://viewables/3D/example_viewable_scene_3d.gd" id="1_f4uo6"]
+[ext_resource type="Script" path="res://content/3D/example_viewable_scene_3d.gd" id="1_f4uo6"]
 [ext_resource type="PackedScene" uid="uid://c74cnbf42ud32" path="res://gltf/spdsx.blend" id="1_qowlm"]
 
 [node name="ExampleViewableScene" type="Node3D"]

@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://dods4mss7u605"]
+
+[ext_resource type="ArrayMesh" uid="uid://cpu4h1cwaupfw" path="res://content/3D/doodle_0/teardrop.res" id="1_djxmg"]
+
+[node name="3dDoodle0" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.44943)
+
+[node name="Mount" type="Node3D" parent="."]
+
+[node name="Teardrop0" type="MeshInstance3D" parent="Mount"]
+mesh = ExtResource("1_djxmg")
+skeleton = NodePath("../..")
+
+[node name="Teardrop1" type="MeshInstance3D" parent="Mount"]
+transform = Transform3D(0.62932, -0.777146, 0, 0.777146, 0.62932, 0, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("1_djxmg")
+skeleton = NodePath("../..")
+
+[node name="Teardrop2" type="MeshInstance3D" parent="Mount"]
+transform = Transform3D(-0.207912, -0.978148, 0, 0.978148, -0.207912, 0, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("1_djxmg")
+skeleton = NodePath("../..")
+
+[node name="Teardrop3" type="MeshInstance3D" parent="Mount"]
+transform = Transform3D(-0.898794, -0.438371, 0, 0.438371, -0.898794, 0, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("1_djxmg")
+skeleton = NodePath("../..")
+
+[node name="Teardrop4" type="MeshInstance3D" parent="Mount"]
+transform = Transform3D(-0.906308, 0.422618, 0, -0.422618, -0.906308, 0, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("1_djxmg")
+skeleton = NodePath("../..")
+
+[node name="Teardrop5" type="MeshInstance3D" parent="Mount"]
+transform = Transform3D(-0.224951, 0.97437, 0, -0.97437, -0.224951, 0, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("1_djxmg")
+skeleton = NodePath("../..")
+
+[node name="Teardrop6" type="MeshInstance3D" parent="Mount"]
+transform = Transform3D(0.615662, 0.788011, 0, -0.788011, 0.615662, 0, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("1_djxmg")
+skeleton = NodePath("../..")

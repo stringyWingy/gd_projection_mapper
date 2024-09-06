@@ -1,6 +1,7 @@
 class_name ViewsDB
 extends Resource
 
+const gather_from_path = "res://content"
 var viewables = {}
 
 var views = {
@@ -14,11 +15,11 @@ signal views_list_changed
 
 func _init():
 	#open the res://viewables folder and collect all the .tres files there into the viewables dict
-	var dir = DirAccess.open("res://viewables")
+	var dir = DirAccess.open(gather_from_path)
 	if dir:
 		var fnames = dir.get_files()
 		for f in fnames:
-			var vb = load("res://viewables/%s" % f)
+			var vb = load(gather_from_path + "/" + f)
 			viewables[vb.get_id()] = vb
 	viewables_list_changed.emit()
 

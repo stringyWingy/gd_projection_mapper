@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=4 uid="uid://g3qon6c7xytj"]
 
 [ext_resource type="Script" path="res://projection_quad/projection_quad_2d.gd" id="1_0yffn"]
-[ext_resource type="Texture2D" uid="uid://wd4e6vyklh4o" path="res://viewables/texture/uv_grid.webp" id="1_he6u2"]
+[ext_resource type="Texture2D" uid="uid://wd4e6vyklh4o" path="res://content/texture/uv_grid.webp" id="1_he6u2"]
 [ext_resource type="Script" path="res://projection_quad/clickable_poly2D.gd" id="3_op5qt"]
 [ext_resource type="Script" path="res://projection_quad/outliner_2d.gd" id="3_re6rk"]
 

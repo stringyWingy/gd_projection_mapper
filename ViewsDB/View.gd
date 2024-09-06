@@ -16,7 +16,7 @@ static func get_default_view() -> View:
 	if !DEFAULT_VIEW:
 		DEFAULT_VIEW = View.new()
 		DEFAULT_VIEW.name = "DEFAULT VIEW"
-		DEFAULT_VIEW.set_viewable(preload("res://viewables/vb_uv_grid.tres"))
+		DEFAULT_VIEW.set_viewable(preload("res://content/vb_uv_grid.tres"))
 
 		print("initialized get_default_view view %s" % DEFAULT_VIEW)
 		
