@@ -40,6 +40,7 @@ var active_view : View = null
 var stashed_view : View = null
 
 var selected_viewable : Viewable = null
+
 var viewsDB = ViewsDB.new()
 
 var file_selector = FileDialog.new()
@@ -107,7 +108,7 @@ func _on_display_face_selected(face : Node2D):
 	#set the uv vertex handle positions in the uv editor
 	active_face = face
 	client_views.refresh()
-	print("EditorServer: active face is %s" % face.name)
+	#print("EditorServer: active face is %s" % face.name)
 
 
 func _on_uv_update(uvs : PackedVector2Array):
@@ -116,12 +117,12 @@ func _on_uv_update(uvs : PackedVector2Array):
 
 func _on_viewable_selected(viewable : Viewable):
 	selected_viewable = viewable
-	print("EditorServer: selected viewable %s" % viewable.name)
+	#print("EditorServer: selected viewable %s" % viewable.name)
 
 
 func _on_view_selected(view : View):
 	selected_view = view
-	print("EditorServer: selected view is %s" % view.name)
+	#print("EditorServer: selected view is %s" % view.name)
 
 
 func _on_view_activated():
@@ -130,22 +131,23 @@ func _on_view_activated():
 	if client_display != null:
 		client_display.face_set_view(active_face, selected_view)
 
-func _on_view_replace_viewable():
+func _on_view_replace_viewable(_camera_idx : int = -1):
 	#swap the viewable of the active view to the new one and commit the change
-	active_view.set_viewable(selected_viewable)
+	active_view.set_viewable(selected_viewable, _camera_idx)
 
 
-func _on_new_view():
+func _on_new_view(_camera_idx_getter : Callable = func()->void: pass):
 	#add the view parameters to the views db / collection of views on current face
 	#create the thumbnail for it
 	#notify the view queue ui of the change
+	var _camera_idx = _camera_idx_getter.call()
 	if active_face != null:
-		popup_rename.invoke("new view for %s" % active_face.name, selected_viewable.name, confirm_new_view)
+		popup_rename.invoke("new view for %s" % active_face.name, selected_viewable.name, confirm_new_view.bind(_camera_idx))
 
-func confirm_new_view(_name : String):
+func confirm_new_view(_name : String, _camera_idx : int = -1):
 	var view = viewsDB.create_view()
 	view.rename(_name)
-	view.set_viewable(selected_viewable)
+	view.set_viewable(selected_viewable, _camera_idx)
 
 	if active_face != null:
 		active_face.views.append(view.id)
@@ -246,4 +248,3 @@ func get_most_recent_save_path() -> String:
 	return path
 	
 	
-

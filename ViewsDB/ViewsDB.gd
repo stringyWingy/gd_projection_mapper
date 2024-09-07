@@ -23,6 +23,31 @@ func _init():
 			viewables[vb.get_id()] = vb
 	viewables_list_changed.emit()
 
+	probe_for_cameras()
+
+
+
+func probe_for_cameras() -> void:
+	for vid in viewables:
+		var v = viewables[vid]
+		match v.type:
+			Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
+				var tmp = v.resource.instantiate()
+				var cameras = parse_camera_paths(tmp)
+				v.cameras = cameras
+				tmp.queue_free()
+		
+func parse_camera_paths(n : Node) -> Array:
+	var ret = []
+	#print("looking for cameras in %s" % n.name)
+	for c in n.get_children():
+		if c is Camera2D or c is Camera3D:
+			#print("found camera %s" %  c.name)
+			ret.append({
+				"name" : c.name,
+				"path" : n.get_path_to(c)
+				})
+	return ret
 
 func create_view() -> View:
 	var id = create_view_id()
@@ -62,5 +87,3 @@ func load_save_data(data):
 	for view_data in data.views:
 		var view = View.from_save_data(view_data)
 		views[view.id] = view
-
-

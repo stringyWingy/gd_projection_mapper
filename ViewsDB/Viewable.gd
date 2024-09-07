@@ -17,6 +17,11 @@ var thumbnail : Texture2D = null
 var id : int
 var views_of : int = 0
 
+#list of objects with
+# name : name of camera
+# path : relative path from root node to camera
+var cameras = []
+
 signal thumbnail_changed
 
 func get_id():

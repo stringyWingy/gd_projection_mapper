@@ -32,6 +32,7 @@ var handles = []
 var views = [0] #0 will be default view, eh?
 
 var active_view : View
+var active_view_instance : Node
 var video_player = VideoStreamPlayer.new()
 
 var tex_data = {
@@ -315,9 +316,16 @@ func auto_uv():
 
 
 func set_view(view : View):
-	if active_view == view: return
+	if active_view == view && active_view.camera_idx == view.camera_idx : return
 
-	#case-by-case cleanup of previous view
+
+	#check if all we have to do is swap cameras on the current view
+	if active_view == view && active_view.camera_idx != view.camera_idx : 
+		set_view_camera()
+		return
+
+
+	#cleanup
 	if active_view:
 		match active_view.viewable.type:
 			Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
@@ -340,13 +348,18 @@ func set_view(view : View):
 
 	active_view = view
 
+	#new view
+	#TODO: check if the view has already been instanced for another viewport, and copy that world
 	match view.viewable.type:
 		Viewable.Type.TEXTURE2D:
 			texture = view.viewable.resource
 
 		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
 			texture = viewport_texture
-			subviewport.add_child(view.viewable.resource.instantiate())
+			var scn = view.viewable.resource.instantiate()
+			active_view_instance = scn
+			set_view_camera()
+			subviewport.add_child(scn)
 
 		Viewable.Type.VIDEOSTREAM:
 			video_player.set_stream(view.viewable.resource)
@@ -382,6 +395,10 @@ func set_view(view : View):
 	if view.auto_uv:
 		auto_uv()
 
+
+func set_view_camera()->void:
+	var camera_path = active_view.viewable.cameras[active_view.camera_idx].path
+	active_view_instance.get_node(camera_path).make_current()
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():

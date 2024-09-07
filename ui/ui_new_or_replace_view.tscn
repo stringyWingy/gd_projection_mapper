@@ -29,3 +29,12 @@ text = "new..."
 [node name="ButtonReplace" type="Button" parent="HFlowContainer"]
 layout_mode = 2
 text = "replace"
+
+[node name="CameraSelect" type="OptionButton" parent="HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "camera_0"
+popup/item_1/text = "camera_1"
+popup/item_1/id = 1

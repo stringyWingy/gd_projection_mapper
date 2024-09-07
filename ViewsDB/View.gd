@@ -18,8 +18,6 @@ static func get_default_view() -> View:
 		DEFAULT_VIEW.name = "DEFAULT VIEW"
 		DEFAULT_VIEW.set_viewable(preload("res://content/vb_uv_grid.tres"))
 
-		print("initialized get_default_view view %s" % DEFAULT_VIEW)
-		
 	return DEFAULT_VIEW
 
 var name : String
@@ -29,6 +27,7 @@ var auto_uv : bool = true
 var material : Material # might just use a common material and apply post process shaders or something
 var thumbnail : Texture2D
 var id : int
+var camera_idx : int = 0
 
 func rename(_name : String):
 	if _name != name:
@@ -36,9 +35,12 @@ func rename(_name : String):
 		emit_changed()
 
 
-func set_viewable(_viewable : Viewable):
+func set_viewable(_viewable : Viewable, _camera_idx = -1):
 	if viewable != _viewable:
 		viewable = _viewable
+
+		if _camera_idx > 0:
+			camera_idx = _camera_idx
 		#for now we'll just set this thumbnail to whatever the viewables thumb is
 		viewable.connect("thumbnail_changed", set_thumbnail)
 		emit_changed()
@@ -47,6 +49,10 @@ func set_viewable(_viewable : Viewable):
 func set_thumbnail(_thumbnail : Texture2D):
 	thumbnail = _thumbnail
 	thumbnail_changed.emit(thumbnail)
+
+
+func set_camera_idx(_idx : int):
+	camera_idx = _idx
 
 
 func set_uvs(_uvs : PackedVector2Array):
@@ -64,7 +70,8 @@ func get_save_data():
 		"name" : name,
 		"viewable" : viewable.id,
 		"uvs" : Array(var_to_bytes(uvs)),
-		"auto_uv" : auto_uv
+		"auto_uv" : auto_uv,
+		"camera_idx" : camera_idx
 	}
 	return data
 
@@ -75,4 +82,5 @@ static func from_save_data(data) -> View:
 	view.set_viewable(PEditorServer.getViewsDB().get_viewable(data.viewable))
 	view.set_uvs(bytes_to_var(PackedByteArray(data.uvs)))
 	view.auto_uv = data.auto_uv
+	view.camera_idx = data.camera_idx
 	return view

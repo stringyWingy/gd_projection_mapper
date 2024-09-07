@@ -44,15 +44,19 @@ func _ready():
 
 func _on_scene_tile_selected(button : BaseButton):
    selected_viewable = button.owner.viewable
+
+   #this is dumb
+   var camera_idx_getter = ui_new_or_replace_view.get_selected_camera_idx
+
    ui_new_or_replace_view.set_label_text(selected_viewable.name)
    ui_new_or_replace_view.visible = true
-   ui_new_or_replace_view.button_new.connect("pressed", PEditorServer.ref()._on_new_view)
-   ui_new_or_replace_view.button_replace.connect("pressed", PEditorServer.ref()._on_view_replace_viewable)
+   ui_new_or_replace_view.button_new.connect("pressed", PEditorServer.ref()._on_new_view.bind(camera_idx_getter))
+   ui_new_or_replace_view.button_replace.connect("pressed", PEditorServer.ref()._on_view_replace_viewable.bind(camera_idx_getter))
    ui_new_or_replace_view.set_replace_valid(
 	  PEditorServer.ref().active_view != null && 
 	  PEditorServer.ref().active_view.viewable != selected_viewable
 	  )
-
+   ui_new_or_replace_view.set_cameras(selected_viewable.cameras)
    viewable_selected.emit(selected_viewable)
 
 
