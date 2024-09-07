@@ -1,6 +1,6 @@
 #TODO
 
-names for projection quads, labels that float over them in the editor
+add an action to force re-render of thumbnail for a viewable
 
 ===
 
