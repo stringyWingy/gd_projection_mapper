@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Viewable" load_steps=3 format=3 uid="uid://c07rbjs5nwb6q"]
+
+[ext_resource type="PackedScene" uid="uid://wdmrg0necxxq" path="res://content/3D/doodle_0/3d_doodle_0.tscn" id="1_ut2d5"]
+[ext_resource type="Script" path="res://ViewsDB/Viewable.gd" id="2_j77kg"]
+
+[resource]
+script = ExtResource("2_j77kg")
+name = "Teardrop Flower"
+type = 1
+resource = ExtResource("1_ut2d5")

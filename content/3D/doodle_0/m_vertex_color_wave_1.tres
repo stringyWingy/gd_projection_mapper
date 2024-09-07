@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://brautyh4b5k6h"]
+
+[ext_resource type="Shader" uid="uid://b7gd4p14u5awd" path="res://content/3D/doodle_0/vertex_color_ramp.tres" id="1_2y83t"]
+[ext_resource type="Texture2D" uid="uid://xuhbybvshb8s" path="res://content/3D/doodle_0/cr_sick_lion.tres" id="2_a0ypp"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_2y83t")
+shader_parameter/TimeScale = 1.0
+shader_parameter/ramp_offset = 0.5
+shader_parameter/ColorRamp = ExtResource("2_a0ypp")

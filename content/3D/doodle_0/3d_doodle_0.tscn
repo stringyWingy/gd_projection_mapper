@@ -1,44 +1,118 @@
-[gd_scene load_steps=2 format=3 uid="uid://dods4mss7u605"]
+[gd_scene load_steps=4 format=3 uid="uid://wdmrg0necxxq"]
 
 [ext_resource type="ArrayMesh" uid="uid://cpu4h1cwaupfw" path="res://content/3D/doodle_0/teardrop.res" id="1_djxmg"]
+[ext_resource type="Script" path="res://content/3D/doodle_0/3d_doodle_0.gd" id="1_iemky"]
+[ext_resource type="ArrayMesh" uid="uid://dn0x3r85ibgo4" path="res://content/3D/doodle_0/teardrop_1.res" id="1_lrh48"]
 
 [node name="3dDoodle0" type="Node3D"]
+script = ExtResource("1_iemky")
+base_rotation_speed = 0.4
+harmonic_1 = 0.667
+harmonic_2 = 0.5
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.44943)
+[node name="Camera_top" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.74897)
+projection = 1
+size = 2.3
+metadata/cam_index = 0
 
-[node name="Mount" type="Node3D" parent="."]
+[node name="Camera_angle" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.6165, -0.787355, 0, 0.787355, 0.6165, 0, -2.35857, 0.772946)
+projection = 1
+fov = 37.8493
+size = 2.4
+near = 1.0
+metadata/cam_index = 1
 
-[node name="Teardrop0" type="MeshInstance3D" parent="Mount"]
+[node name="Flower0" type="Node3D" parent="."]
+transform = Transform3D(0.906308, -0.422618, 0, 0.422618, 0.906308, 0, 0, 0, 1, 0, 0, 0.15)
+
+[node name="Teardrop0" type="MeshInstance3D" parent="Flower0"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop1" type="MeshInstance3D" parent="Flower0"]
+transform = Transform3D(0.62932, -0.673028, -0.388573, 0.777146, 0.545007, 0.31466, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop2" type="MeshInstance3D" parent="Flower0"]
+transform = Transform3D(-0.207912, -0.847101, -0.489074, 0.978148, -0.180057, -0.103956, 7.32364e-09, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop3" type="MeshInstance3D" parent="Flower0"]
+transform = Transform3D(-0.898794, -0.37964, -0.219186, 0.438371, -0.778378, -0.449397, -1.46473e-08, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop4" type="MeshInstance3D" parent="Flower0"]
+transform = Transform3D(-0.906308, 0.365998, 0.211309, -0.422618, -0.784886, -0.453154, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop5" type="MeshInstance3D" parent="Flower0"]
+transform = Transform3D(-0.224951, 0.843829, 0.487185, -0.97437, -0.194813, -0.112475, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop6" type="MeshInstance3D" parent="Flower0"]
+transform = Transform3D(0.615662, 0.682438, 0.394005, -0.788011, 0.533179, 0.307831, 1.49012e-08, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Flower1" type="Node3D" parent="."]
+transform = Transform3D(1.333, 0, 0, 0, 1.333, 0, 0, 0, 1.333, 0, 0, -0.3)
+
+[node name="Teardrop0" type="MeshInstance3D" parent="Flower1"]
+transform = Transform3D(1, 0, 0, 0, 0.92388, 0.382683, 0, -0.382683, 0.92388, 0, 0, 0)
 mesh = ExtResource("1_djxmg")
-skeleton = NodePath("../..")
 
-[node name="Teardrop1" type="MeshInstance3D" parent="Mount"]
-transform = Transform3D(0.62932, -0.777146, 0, 0.777146, 0.62932, 0, 0, 0, 1, 0, 0, 0)
+[node name="Teardrop1" type="MeshInstance3D" parent="Flower1"]
+transform = Transform3D(0.62932, -0.717989, -0.297401, 0.777146, 0.581416, 0.24083, -2.22243e-08, -0.382683, 0.92388, 0, 0, 0)
 mesh = ExtResource("1_djxmg")
-skeleton = NodePath("../..")
 
-[node name="Teardrop2" type="MeshInstance3D" parent="Mount"]
-transform = Transform3D(-0.207912, -0.978148, 0, 0.978148, -0.207912, 0, 0, 0, 1, 0, 0, 0)
+[node name="Teardrop2" type="MeshInstance3D" parent="Flower1"]
+transform = Transform3D(-0.207912, -0.903691, -0.374321, 0.978148, -0.192086, -0.0795645, 3.69342e-09, -0.382684, 0.92388, 0, 0, 0)
 mesh = ExtResource("1_djxmg")
-skeleton = NodePath("../..")
 
-[node name="Teardrop3" type="MeshInstance3D" parent="Mount"]
-transform = Transform3D(-0.898794, -0.438371, 0, 0.438371, -0.898794, 0, 0, 0, 1, 0, 0, 0)
+[node name="Teardrop3" type="MeshInstance3D" parent="Flower1"]
+transform = Transform3D(-0.898794, -0.405002, -0.167757, 0.438371, -0.830377, -0.343954, 0, -0.382683, 0.92388, 0, 0, 0)
 mesh = ExtResource("1_djxmg")
-skeleton = NodePath("../..")
 
-[node name="Teardrop4" type="MeshInstance3D" parent="Mount"]
-transform = Transform3D(-0.906308, 0.422618, 0, -0.422618, -0.906308, 0, 0, 0, 1, 0, 0, 0)
+[node name="Teardrop4" type="MeshInstance3D" parent="Flower1"]
+transform = Transform3D(-0.906308, 0.390448, 0.161729, -0.422618, -0.837319, -0.346829, 0, -0.382683, 0.92388, 0, 0, 0)
 mesh = ExtResource("1_djxmg")
-skeleton = NodePath("../..")
 
-[node name="Teardrop5" type="MeshInstance3D" parent="Mount"]
-transform = Transform3D(-0.224951, 0.97437, 0, -0.97437, -0.224951, 0, 0, 0, 1, 0, 0, 0)
+[node name="Teardrop5" type="MeshInstance3D" parent="Flower1"]
+transform = Transform3D(-0.224951, 0.9002, 0.372875, -0.97437, -0.207828, -0.086085, -1.86265e-09, -0.382683, 0.92388, 0, 0, 0)
 mesh = ExtResource("1_djxmg")
-skeleton = NodePath("../..")
 
-[node name="Teardrop6" type="MeshInstance3D" parent="Mount"]
-transform = Transform3D(0.615662, 0.788011, 0, -0.788011, 0.615662, 0, 0, 0, 1, 0, 0, 0)
+[node name="Teardrop6" type="MeshInstance3D" parent="Flower1"]
+transform = Transform3D(0.615662, 0.728027, 0.301559, -0.788011, 0.568798, 0.235604, 0, -0.382684, 0.92388, 0, 0, 0)
 mesh = ExtResource("1_djxmg")
-skeleton = NodePath("../..")
+
+[node name="Flower2" type="Node3D" parent="."]
+transform = Transform3D(1.61051, -0.750993, 0, 0.750993, 1.61051, 0, 0, 0, 1.777, 0, 0, -0.7)
+
+[node name="Teardrop0" type="MeshInstance3D" parent="Flower2"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop1" type="MeshInstance3D" parent="Flower2"]
+transform = Transform3D(0.62932, -0.673028, -0.388573, 0.777146, 0.545007, 0.31466, -1.43934e-08, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop2" type="MeshInstance3D" parent="Flower2"]
+transform = Transform3D(-0.207912, -0.847101, -0.489074, 0.978148, -0.180057, -0.103956, 7.32364e-09, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop3" type="MeshInstance3D" parent="Flower2"]
+transform = Transform3D(-0.898794, -0.37964, -0.219186, 0.438371, -0.778378, -0.449397, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop4" type="MeshInstance3D" parent="Flower2"]
+transform = Transform3D(-0.906308, 0.365998, 0.211309, -0.422618, -0.784886, -0.453154, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop5" type="MeshInstance3D" parent="Flower2"]
+transform = Transform3D(-0.224951, 0.843829, 0.487185, -0.97437, -0.194813, -0.112475, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")
+
+[node name="Teardrop6" type="MeshInstance3D" parent="Flower2"]
+transform = Transform3D(0.615662, 0.682438, 0.394005, -0.788011, 0.533179, 0.307831, 0, -0.5, 0.866025, 0, 0, 0)
+mesh = ExtResource("1_lrh48")

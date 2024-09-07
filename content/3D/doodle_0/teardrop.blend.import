@@ -32,6 +32,12 @@ animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
+"materials": {
+"m_vertex": {
+"use_external/enabled": true,
+"use_external/path": "res://content/3D/doodle_0/m_vertex_color_wave.tres"
+}
+},
 "meshes": {
 "teardrop_Icosphere": {
 "generate/lightmap_uv": 0,
