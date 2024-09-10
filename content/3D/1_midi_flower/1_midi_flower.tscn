@@ -1,0 +1,63 @@
+[gd_scene load_steps=8 format=3 uid="uid://yh3v8w8637gc"]
+
+[ext_resource type="Script" path="res://content/3D/1_midi_flower/1_midi_flower.gd" id="1_1aaig"]
+[ext_resource type="Environment" uid="uid://couenb2v3yebd" path="res://content/3D/doodle_0/env.tres" id="2_4io0y"]
+[ext_resource type="Environment" uid="uid://bguu7rdxa2m7d" path="res://content/3D/1_midi_flower/env.tres" id="2_24pwr"]
+[ext_resource type="Script" path="res://movie_graceful_exit.gd" id="4_jeoa2"]
+[ext_resource type="PackedScene" uid="uid://cyeu77eiidmxn" path="res://content/3D/1_midi_flower/flower.tscn" id="5_7tfhg"]
+[ext_resource type="Script" path="res://midi/MidiTimer.gd" id="5_caqu3"]
+[ext_resource type="Script" path="res://content/3D/1_midi_flower/flower_midi_client.gd" id="7_8hi5e"]
+
+[node name="3dDoodle0" type="Node3D"]
+script = ExtResource("1_1aaig")
+base_rotation_speed = 0.2
+
+[node name="Camera_top" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.74897)
+environment = ExtResource("2_24pwr")
+projection = 1
+size = 4.0
+far = 100.0
+metadata/cam_index = 0
+
+[node name="Camera_angle" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.6165, -0.787355, 0, 0.787355, 0.6165, 0, -4.30318, 1.53353)
+environment = ExtResource("2_4io0y")
+projection = 1
+current = true
+fov = 37.8493
+size = 4.0
+near = 1.0
+far = 20.13
+metadata/cam_index = 1
+
+[node name="movie_exitier" type="Node" parent="."]
+script = ExtResource("4_jeoa2")
+
+[node name="MidiTimer" type="Node" parent="."]
+script = ExtResource("5_caqu3")
+
+[node name="FlowerParent" type="Node3D" parent="."]
+
+[node name="Flower4" parent="FlowerParent" instance=ExtResource("5_7tfhg")]
+transform = Transform3D(-0.519096, 2.27452, 0, -2.27452, -0.519096, 0, 0, 0, 2.333, 0, 0, -2.1)
+
+[node name="Flower3" parent="FlowerParent" instance=ExtResource("5_7tfhg")]
+transform = Transform3D(0.445071, 1.94985, 0, -1.94985, 0.445071, 0, 0, 0, 2, 0, 0, -1.5)
+
+[node name="Flower2" parent="FlowerParent" instance=ExtResource("5_7tfhg")]
+transform = Transform3D(1.03501, 1.29783, 0, -1.29783, 1.03501, 0, 0, 0, 1.66, 0, 0, -1)
+
+[node name="Flower1" parent="FlowerParent" instance=ExtResource("5_7tfhg")]
+transform = Transform3D(1.17126, 0.564043, 0, -0.564043, 1.17126, 0, 0, 0, 1.3, 0, 0, -0.5)
+
+[node name="Flower0" parent="FlowerParent" instance=ExtResource("5_7tfhg")]
+
+[node name="NoteListener" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("7_8hi5e")
+channel = 8
+
+[connection signal="timeout" from="MidiTimer" to="." method="_on_quarter_note"]
+[connection signal="sig_note_off" from="NoteListener" to="." method="_on_note_off"]
+[connection signal="sig_note_on" from="NoteListener" to="." method="_on_note_on"]

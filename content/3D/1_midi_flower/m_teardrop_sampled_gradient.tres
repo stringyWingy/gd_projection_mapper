@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://83kcc8mo43nh"]
+
+[ext_resource type="Shader" uid="uid://bp2e14lp3l3dy" path="res://content/3D/1_midi_flower/vertex_color_ramp.tres" id="1_osi7b"]
+[ext_resource type="Texture2D" uid="uid://xuhbybvshb8s" path="res://content/3D/doodle_0/cr_sick_lion.tres" id="2_y674d"]
+[ext_resource type="Texture2D" uid="uid://c11pmope6ayug" path="res://content/3D/1_midi_flower/t_teardrop_gradient.png" id="3_eqwu8"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_osi7b")
+shader_parameter/inflate_amt = 0.083
+shader_parameter/u_quarter_note_asr = null
+shader_parameter/vel_gradient_scale_max = 1.0
+shader_parameter/time_scale = -1.0
+shader_parameter/n_groups = 3
+shader_parameter/uv_gradient_map = ExtResource("3_eqwu8")
+shader_parameter/color_map = ExtResource("2_y674d")

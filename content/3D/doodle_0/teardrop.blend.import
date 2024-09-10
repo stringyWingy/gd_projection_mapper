@@ -35,7 +35,7 @@ _subresources={
 "materials": {
 "m_vertex": {
 "use_external/enabled": true,
-"use_external/path": "res://content/3D/doodle_0/m_vertex_color_wave.tres"
+"use_external/path": "res://content/3D/doodle_0/m_teardrop_sampled_gradient.tres"
 }
 },
 "meshes": {

@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://cyeu77eiidmxn"]
+
+[ext_resource type="ArrayMesh" uid="uid://d1d5scam7b4vq" path="res://content/3D/1_midi_flower/teardrop.res" id="1_adhu6"]
+
+[node name="Flower" type="Node3D"]
+
+[node name="Teardrop0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.02643, 0.382683, 0, -0.425161, 0.92388, 0, 0, 0)
+mesh = ExtResource("1_adhu6")
+
+[node name="Teardrop1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.623484, 0.8025, 0.299195, -0.781836, 0.639963, 0.238597, 0, -0.425161, 0.92388, 0, 0, 0)
+mesh = ExtResource("1_adhu6")
+
+[node name="Teardrop2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.222536, 1.00069, 0.373087, -0.974924, -0.228417, -0.0851605, 1.85813e-08, -0.425161, 0.92388, 0, 0, 0)
+mesh = ExtResource("1_adhu6")
+
+[node name="Teardrop3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.900979, 0.445331, 0.166032, -0.433863, -0.924792, -0.344789, 3.91092e-08, -0.425161, 0.92388, 0, 0, 0)
+mesh = ExtResource("1_adhu6")
+
+[node name="Teardrop4" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.900956, -0.445379, -0.16605, 0.433911, -0.924768, -0.34478, 3.91092e-08, -0.425161, 0.92388, 0, 0, 0)
+mesh = ExtResource("1_adhu6")
+
+[node name="Teardrop5" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.222484, -1.0007, -0.373091, 0.974936, -0.228364, -0.0851409, 6.5466e-08, -0.425161, 0.92388, 0, 0, 0)
+mesh = ExtResource("1_adhu6")
+
+[node name="Teardrop6" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.623525, -0.802466, -0.299183, 0.781803, 0.640005, 0.238612, 5.88355e-08, -0.425161, 0.92388, 0, 0, 0)
+mesh = ExtResource("1_adhu6")

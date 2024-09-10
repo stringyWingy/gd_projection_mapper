@@ -49,6 +49,7 @@ var most_recent_save_path : String = ""
 
 func _ready():
 	add_child(thumbnailer)
+	add_child(MidiClock.ref())
 
 	get_viewport().set_embedding_subwindows(true)
 	popup_rename = preload("res://ui/popup_new_name.tscn").instantiate()
