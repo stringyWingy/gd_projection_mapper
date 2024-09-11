@@ -69,7 +69,13 @@ color_normal = Color(0.560784, 0.560784, 0.560784, 1)
 behavior = 1
 
 [node name="SubViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
 own_world_3d = true
+
+[node name="TransitionViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+own_world_3d = true
+render_target_update_mode = 0
 
 [node name="handle_0" type="Polygon2D" parent="."]
 visible = false

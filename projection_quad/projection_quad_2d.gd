@@ -1,4 +1,5 @@
 @tool
+
 class_name ProjectionQuad2D
 extends MeshInstance2D
 
@@ -14,6 +15,7 @@ signal tex_data_changed
 @onready var clickable_face : Polygon2D = $clickable_face
 @onready var outline : Line2D = $outline
 @onready var subviewport : SubViewport = $SubViewport
+@onready var transitionviewport : SubViewport = %TransitionViewport
 @onready var viewport_texture := subviewport.get_texture()
 @onready var label := $Label
 
@@ -26,7 +28,8 @@ static var DEFAULT_UVS := PackedVector2Array(
 var xverts = subdivision_resolution.x + 1
 var yverts = subdivision_resolution.y + 1
 
-var handle_uvs := PackedVector2Array() 
+var handle_uvs := PackedVector2Array(DEFAULT_UVS) 
+var handle_uvs_2 := PackedVector2Array(DEFAULT_UVS) 
 var handles = []
 
 var views = [0] #0 will be default view, eh?
@@ -43,10 +46,12 @@ var tex_data = {
 var mesh_data = []
 var vertices := PackedVector3Array() 
 var uvs := PackedVector2Array() 
+var uvs2 := PackedVector2Array()
 var indices := PackedInt32Array() 
 
 var needs_rebuild_mesh := false
 var needs_rebuild_uvs := false
+var needs_rebuild_uvs_2 := false
 
 func set_editor_context(context : Node) -> void:
 	editor_context = context
@@ -114,6 +119,7 @@ func init_video_player() -> void:
 
 func init_mesh() -> void:
 	uvs.clear()
+	uvs2.clear()
 	vertices.clear()
 	indices.clear()
 
@@ -133,6 +139,7 @@ func init_mesh() -> void:
 			var pos = v2_v3(pos2)
 
 			uvs.append(uv)
+			uvs2.append(uv)
 			vertices.append(pos)
 	#end creating vertices
 
@@ -160,6 +167,7 @@ func init_mesh() -> void:
 	#slap all this data into the surface
 	mesh_data[ArrayMesh.ARRAY_VERTEX] = vertices
 	mesh_data[ArrayMesh.ARRAY_TEX_UV] = uvs
+	mesh_data[ArrayMesh.ARRAY_TEX_UV2] = uvs2
 	mesh_data[ArrayMesh.ARRAY_INDEX] =  indices
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
@@ -216,18 +224,20 @@ func refresh_label_position():
 
 
 
-func rebuild_uv() -> void:
-	uvs.clear()
+func rebuild_uv(channel: int = 0) -> void:
+	var handle_uv_channel = handle_uvs if !channel else handle_uvs_2
+	var uv_channel = uvs if !channel else uvs2
+	uv_channel.clear()
 
 	for j : float in yverts:
 		for i : float in xverts:
 			#get positions along the 'top' and 'bottom' edges (in uv space) based on the x index coordinate of this vertex
-			var p1 = handle_uvs[0].lerp(handle_uvs[1], i/subdivision_resolution.x)
-			var p2 = handle_uvs[2].lerp(handle_uvs[3], i/subdivision_resolution.x)
+			var p1 = handle_uv_channel[0].lerp(handle_uv_channel[1], i/subdivision_resolution.x)
+			var p2 = handle_uv_channel[2].lerp(handle_uv_channel[3], i/subdivision_resolution.x)
 
 			#lerp between those two positions to create a y axis in handle space
 			var p = p1.lerp(p2, j/subdivision_resolution.y)
-			uvs.append(p)
+			uv_channel.append(p)
 
 	mesh.clear_surfaces()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
@@ -256,24 +266,40 @@ func refresh_tex_data():
 		tex_data_changed.emit(tex_data)
 
 
-func set_uvs(_uvs : PackedVector2Array):
-	if handle_uvs != _uvs:
-		handle_uvs = _uvs
-		needs_rebuild_uvs = true
+func set_uvs(_uvs : PackedVector2Array, channel: int = 0):
+	var uv_channel = handle_uvs if !channel else handle_uvs_2
+	if uv_channel != _uvs:
+		uv_channel = _uvs
+		match channel:
+			0:
+				needs_rebuild_uvs = true
+			1:
+				needs_rebuild_uvs_2 = true
+			_:
+				pass
 
 
-func reset_uvs():
-	if handle_uvs != ProjectionQuad2D.DEFAULT_UVS:
-		handle_uvs = ProjectionQuad2D.DEFAULT_UVS
-		needs_rebuild_uvs = true
+func reset_uvs(channel: int = 0):
+	var uv_channel = handle_uvs if !channel else handle_uvs_2
+	if uv_channel != ProjectionQuad2D.DEFAULT_UVS:
+		uv_channel = ProjectionQuad2D.DEFAULT_UVS
+		match channel:
+			0:
+				needs_rebuild_uvs = true
+			1:
+				needs_rebuild_uvs_2 = true
+			_:
+				pass
 	
 
-func auto_uv():
+#by default, will map uvs so that textures of mismatched dimensions
+#(video streams or raw texture viewables) will "cover" the surface while preserving aspect ration
+#optionally, provide a different viewable, or assign the resulting uvs to the secondary uv attribute in the mesh instead
+func auto_uv(viewable: Viewable = active_view.viewable, channel: int = 0):
 	#get the resolution and aspect of the quad
 	#set new resolution for its subviewport
 	#get resolution data of the texture of its active view??
 	#set its uvs so as to "center / cover"
-	var viewable = active_view.viewable
 
 	match viewable.type:
 		Viewable.Type.TEXTURE2D:
@@ -288,7 +314,7 @@ func auto_uv():
 					Vector2(0.5 + uv_width/2, 0),
 					Vector2(0.5 - uv_width/2, 1),
 					Vector2(0.5 + uv_width/2, 1)])
-				set_uvs(_uvs)
+				set_uvs(_uvs, channel)
 
 			elif q_aspect > t_aspect:
 				var uv_height : float = t_aspect / q_aspect
@@ -297,19 +323,19 @@ func auto_uv():
 					Vector2(1, 0.5 - uv_height/2),
 					Vector2(0, 0.5 + uv_height/2),
 					Vector2(1, 0.5 + uv_height/2)])
-				set_uvs(_uvs)
+				set_uvs(_uvs, channel)
 
 			else:
-				reset_uvs()
+				reset_uvs(channel)
 
 		#if the face's texture is being rendered from a camera/subviewport
 		#the uvs should cover the full rectangle
 		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
-			reset_uvs()
+			reset_uvs(channel)
 
 		Viewable.Type.VIDEOSTREAM:
 			#the videoplayer should fill the subviewport?
-			reset_uvs()
+			reset_uvs(channel)
 
 		_:
 			pass
@@ -436,6 +462,10 @@ func _process(delta):
 	if needs_rebuild_uvs:
 		rebuild_uv()
 		needs_rebuild_uvs = false
+
+	if needs_rebuild_uvs_2:
+		rebuild_uv(1)
+		needs_rebuild_uvs_2 = false
 
 
 func _on_face_selector_clicked(face):
