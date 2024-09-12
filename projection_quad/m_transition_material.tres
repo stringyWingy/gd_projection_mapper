@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cdj40ur780pb5"]
+
+[ext_resource type="Shader" path="res://projection_quad/m_transition_material.gdshader" id="1_1diye"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_1diye")
+shader_parameter/mix_alpha = 0.0

@@ -15,9 +15,9 @@ signal tex_data_changed
 @onready var clickable_face : Polygon2D = $clickable_face
 @onready var outline : Line2D = $outline
 @onready var subviewport : SubViewport = $SubViewport
-@onready var transitionviewport : SubViewport = %TransitionViewport
-@onready var viewport_texture := subviewport.get_texture()
+@onready var transition_viewport : SubViewport = %TransitionViewport
 @onready var label := $Label
+@onready var anim_player = %AnimationPlayer
 
 static var DEFAULT_UVS := PackedVector2Array(
 	[Vector2(0,0),
@@ -38,6 +38,10 @@ var active_view : View
 var active_view_instance : Node
 var video_player = VideoStreamPlayer.new()
 
+var transition_view : View
+var transition_view_instance : Node
+var transition_video_player = VideoStreamPlayer.new()
+
 var tex_data = {
 	resolution = start_size,
 	aspect = float(start_size.x) / start_size.y,
@@ -46,8 +50,9 @@ var tex_data = {
 var mesh_data = []
 var vertices := PackedVector3Array() 
 var uvs := PackedVector2Array() 
-var uvs2 := PackedVector2Array()
+var uvs2 := PackedColorArray()
 var indices := PackedInt32Array() 
+var arraymesh_flags = Mesh.ARRAY_CUSTOM_RG_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT
 
 var needs_rebuild_mesh := false
 var needs_rebuild_uvs := false
@@ -60,12 +65,84 @@ func set_editor_context(context : Node) -> void:
 		h.clicked.connect(editor_context._on_vertex_handle_clicked)
 
 
+#main thing to be called from outside, will transition by default
+func set_view(view: View):
+	set_view_transition(view)
+
+
+func set_texture2(texture2: Texture2D) -> void:
+	material.set_shader_parameter("texture2", texture2)
+
+
+func get_texture2() -> Texture2D:
+	return material.get_shader_parameter("texture2")
+
+
+func set_mix_alpha(alpha: float):
+	material.set_shader_parameter("mix_alpha", alpha)
+
+
+func finish_transition():
+	set_mix_alpha(0)
+
+	#overwrite the texture and uvs with those from the transition
+	texture = get_texture2()
+	handle_uvs = PackedVector2Array(handle_uvs_2)
+
+	var i = 0
+	for uv in uvs:
+		uv.x = uvs2[i].r
+		uv.y = uvs2[i].g
+		i += 1
+
+	#swap the video players since we'll probably need separate references still
+	var video_temp = transition_video_player
+	transition_video_player = video_player
+	video_player = video_temp
+
+	#switcheroo the viewports
+	#we've already swapped around texture references so this should be...fine?
+	var subv_temp = transition_viewport
+	transition_viewport = subviewport
+	subviewport = subv_temp
+	transition_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+
+
+	active_view = transition_view
+	active_view_instance = transition_view_instance
+
+	
 func v3_v2(vec: Vector3) -> Vector2:
 	return Vector2(vec.x,vec.y)
 	
 
 func v2_v3(vec: Vector2) -> Vector3:
 	return Vector3(vec.x,vec.y,0)
+
+
+func v2_color(vec: Vector2) -> Color:
+	return Color(vec.x, vec.y, 0, 0)
+
+func colors_to_mesh_custom_buffer(colors: PackedColorArray) -> PackedFloat32Array:
+	var out = PackedFloat32Array()
+	var stride = 2
+	out.resize(colors.size() * stride)
+
+	for c in colors.size():
+		#var c_int32 = colors[c].to_abgr32()
+		var idx = c * stride 
+		out[idx + 0] = colors[c].r
+		out[idx + 1] = colors[c].g
+		#out[idx + 0] = c_int32
+		#out[idx + 1] = c_int32 >> 8
+		#out[idx + 2] = c_int32 >> 16
+		#out[idx + 3] = c_int32 >> 24
+
+	print("converted colors:")
+	print(colors)
+	print("to rgba8's:")
+	print(out)
+	return out
 
 
 func init_handles() -> void:
@@ -112,10 +189,12 @@ func init_outline() -> void:
 		handles[2].position
 	])
 
+
 func init_video_player() -> void:
 	video_player.set_volume(0)
 	video_player.set_autoplay(true)
 	video_player.set_loop(true)
+
 
 func init_mesh() -> void:
 	uvs.clear()
@@ -130,18 +209,22 @@ func init_mesh() -> void:
 	for j in yverts:
 		for i in xverts:
 			#helpful to have normalized cords progressing along the mesh's limits
-			var frac = Vector2i(i,j) / subdivision_resolution
+			var frac = Vector2(i,j) / Vector2(subdivision_resolution)
 
 			#init uvs as full 0-1
 			var uv = Vector2(frac.x,frac.y)
 
-			var pos2 = (start_size * frac) - (start_size / 2)
+			var pos2 = (Vector2(start_size) * frac) - (Vector2(start_size) / 2)
 			var pos = v2_v3(pos2)
 
 			uvs.append(uv)
-			uvs2.append(uv)
+			uvs2.append(v2_color(uv))
 			vertices.append(pos)
 	#end creating vertices
+	print("initialized uvs [0]")
+	print(uvs)
+	print("initialized uvs [1]")
+	print(uvs2)
 
 	#order up triangles
 	#strategy: go one quad at a time
@@ -167,14 +250,15 @@ func init_mesh() -> void:
 	#slap all this data into the surface
 	mesh_data[ArrayMesh.ARRAY_VERTEX] = vertices
 	mesh_data[ArrayMesh.ARRAY_TEX_UV] = uvs
-	mesh_data[ArrayMesh.ARRAY_TEX_UV2] = uvs2
+	mesh_data[ArrayMesh.ARRAY_CUSTOM0] = colors_to_mesh_custom_buffer(uvs2)
 	mesh_data[ArrayMesh.ARRAY_INDEX] =  indices
 	mesh.clear_surfaces()
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data,[],{},arraymesh_flags)
 	refresh_tex_data()
 	#force refresh tex data on first construction
 	tex_data_changed.emit(tex_data)
 	
+
 func rebuild_selector_polygon() -> void:
 	clickable_face.set_polygon([
 		handles[0].position,
@@ -188,6 +272,7 @@ func rebuild_selector_polygon() -> void:
 		handles[3].position,
 		handles[2].position
 	])
+
 
 func rebuild_positions() -> void:
 
@@ -204,17 +289,17 @@ func rebuild_positions() -> void:
 			vertices.append(v2_v3(p))
 
 	mesh.clear_surfaces()
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data,[],{},arraymesh_flags)
 	refresh_tex_data()
 
 
 func rename(_name : String) -> void:
 	call_deferred("rename_internal", _name)
 
+
 func rename_internal(_name: String) -> void:
 	name = _name
 	label.text = _name
-
 
 
 func refresh_label_position():
@@ -223,11 +308,10 @@ func refresh_label_position():
 	if intersection: label.position = intersection
 
 
-
 func rebuild_uv(channel: int = 0) -> void:
 	var handle_uv_channel = handle_uvs if !channel else handle_uvs_2
-	var uv_channel = uvs if !channel else uvs2
-	uv_channel.clear()
+	var uv_mesh_data = uvs if !channel else uvs2
+	uv_mesh_data.clear()
 
 	for j : float in yverts:
 		for i : float in xverts:
@@ -237,10 +321,15 @@ func rebuild_uv(channel: int = 0) -> void:
 
 			#lerp between those two positions to create a y axis in handle space
 			var p = p1.lerp(p2, j/subdivision_resolution.y)
-			uv_channel.append(p)
+			if channel:
+				uvs2.append(v2_color(p))
+			else:
+				uvs.append(p)
 
 	mesh.clear_surfaces()
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
+	if channel:
+		mesh_data[ArrayMesh.ARRAY_CUSTOM0] = colors_to_mesh_custom_buffer(uvs2)
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data,[],{},arraymesh_flags)
 
 
 func refresh_tex_data():
@@ -341,7 +430,7 @@ func auto_uv(viewable: Viewable = active_view.viewable, channel: int = 0):
 			pass
 
 
-func set_view(view : View):
+func set_view_immediate(view : View):
 	if active_view == view && active_view.camera_idx == view.camera_idx : return
 
 
@@ -381,10 +470,11 @@ func set_view(view : View):
 			texture = view.viewable.resource
 
 		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
-			texture = viewport_texture
+			texture = subviewport.get_texture()
 			var scn = view.viewable.resource.instantiate()
 			active_view_instance = scn
-			set_view_camera()
+			if view.camera_idx > 0:
+				set_view_camera()
 			subviewport.add_child(scn)
 
 		Viewable.Type.VIDEOSTREAM:
@@ -422,15 +512,103 @@ func set_view(view : View):
 		auto_uv()
 
 
+#TODO: add option to customise transition material
+func set_view_transition(view : View):
+	if active_view == view && active_view.camera_idx == view.camera_idx : return
+
+
+	#cleanup
+	if transition_view:
+		match transition_view.viewable.type:
+			Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
+				#clear the subviewports children
+				for c in transition_viewport.get_children():
+					transition_viewport.remove_child(c)
+					c.queue_free()
+
+			Viewable.Type.VIDEOSTREAM:
+				#remove the videoplayer but don't free it from memory
+				transition_video_player.stop()
+				transition_viewport.remove_child(transition_video_player)
+				
+			Viewable.Type.VNC_TEXTURE:
+				#stop getting updates from the server i guess
+				transition_view.viewable.resource.end()
+
+			_:
+				pass
+
+	transition_view = view
+
+	#new view
+	#TODO: check if the view has already been instanced for another viewport, and copy that world
+	match view.viewable.type:
+		Viewable.Type.TEXTURE2D:
+			set_texture2(view.viewable.resource)
+
+		Viewable.Type.SCENE_2D, Viewable.Type.SCENE_3D:
+			set_texture2(transition_viewport.get_texture())
+			var scn = view.viewable.resource.instantiate()
+			transition_view_instance = scn
+			if transition_view.camera_idx > 0:
+				set_view_camera_transition()
+			transition_viewport.add_child(scn)
+			transition_viewport.set_update_mode(SubViewport.UPDATE_ALWAYS)
+
+		Viewable.Type.VIDEOSTREAM:
+			transition_video_player.set_stream(view.viewable.resource)
+			transition_video_player.set_size(tex_data.resolution)
+			transition_viewport.add_child(transition_video_player)
+			set_texture2(transition_video_player.get_video_texture())
+			transition_video_player.play()
+
+		Viewable.Type.VNC_TEXTURE:
+			#it will take a sec for the texture to be usable (and have non-zero dimensions)
+			var placeholder = PlaceholderTexture2D.new() 
+			placeholder.set_size(Vector2(64,64))
+			set_texture2(placeholder)
+
+			var vnc = view.viewable.resource
+
+			var ready_callback = func():
+				set_texture2(vnc)
+				print("vnc ready, swapping out placeholder texture")
+				if view.auto_uv:
+					auto_uv(transition_view.viewable, 1)
+
+
+			#try to connect to the server
+			vnc.begin(vnc.host, vnc.password)
+
+			#vnc_texture will emit this signal when it's initialized
+			vnc.connect("texture_ready", ready_callback, CONNECT_ONE_SHOT)
+
+		_:
+			pass
+	
+	#then auto-uv-ify after updating the teture etc
+	if transition_view.auto_uv:
+		auto_uv(transition_view.viewable, 1)
+
+	#start the animation player babyee
+	#the anim will automatically call finish_transition
+	anim_player.stop()
+	anim_player.play("basic_fade")
+
+
 func set_view_camera()->void:
 	var camera_path = active_view.viewable.cameras[active_view.camera_idx].path
 	active_view_instance.get_node(camera_path).make_current()
+
+func set_view_camera_transition()->void:
+	var camera_path = transition_view.viewable.cameras[transition_view.camera_idx].path
+	transition_view_instance.get_node(camera_path).make_current()
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	label.text = name
 
-	set_view(View.get_default_view())
+	set_view_immediate(View.get_default_view())
 	tex_data_changed.connect(_on_tex_data_changed)
 
 	init_video_player()
@@ -475,6 +653,7 @@ func _on_face_selector_clicked(face):
 #no harm in listening to our own events yeah?
 func _on_tex_data_changed(tex_data):
 	subviewport.set_size(tex_data.resolution)
+	transition_viewport.set_size(tex_data.resolution)
 	var vp = subviewport.find_child("video_player")
 	if vp:
 		vp.set_size(tex_data.resolution)
@@ -503,7 +682,7 @@ static func from_save_data(data) -> ProjectionQuad2D:
 	quad.rename(data.name)
 	quad.position = bytes_to_var(PackedByteArray(data.position))
 	quad.views = data.views
-	quad.set_view.call_deferred(PEditorServer.getViewsDB().get_view(data.active_view))
+	quad.set_view_immediate.call_deferred(PEditorServer.getViewsDB().get_view(data.active_view))
 
 	#need to defer this call so the quad can initialize its handles first
 	var handle_positions = bytes_to_var(PackedByteArray(data.handle_positions))
